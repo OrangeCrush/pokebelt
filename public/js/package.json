@@ -1,0 +1,8 @@
+{
+   "name":"pokebelt.js",
+   "dependencies": {
+      "jquery"    : "latest",
+      "backbone"  : "latest",
+      "stringify" : "latest"
+   }
+}
