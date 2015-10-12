@@ -1,12 +1,17 @@
-var Backbone = require('backbone');
+var Backbone   = require('backbone');
 var IvCalcView = require('./views/IvCalcView');
+var $          = require('jquery');
 
-var AppRouter = Backbone.Router.extend({
+var Router = Backbone.Router.extend({
    routes:{
-      '/ivcalc/:pkmn' : "ivcalc"
+      'ivcalc' : "ivcalc"
    },
 
-   function ivcalc(pkmn){
-      var view = new
+   ivcalc: function(){
+      var view = new IvCalcView({
+         el      : $('#app')
+      });
    }
 });
+
+module.exports = Router;

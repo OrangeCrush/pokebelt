@@ -1,11 +1,12 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var Backbone  = require('backbone');
-var Router = require('./router');
+var Backbone   = require('backbone');
+var Router     = require('./router');
+
 
 var router = new Router();
 Backbone.history.start();
 
-},{"./router":5,"backbone":2}],2:[function(require,module,exports){
+},{"./router":6,"backbone":2}],2:[function(require,module,exports){
 (function (global){
 //     Backbone.js 1.2.3
 
@@ -12666,17 +12667,46 @@ return jQuery;
 }));
 
 },{}],5:[function(require,module,exports){
-var Backbone = require('backbone');
+arguments[4][3][0].apply(exports,arguments)
+},{"dup":3}],6:[function(require,module,exports){
+var Backbone   = require('backbone');
+var IvCalcView = require('./views/IvCalcView');
+var $          = require('jquery');
 
-var AppRouter = Backbone.Router.extend({
+var Router = Backbone.Router.extend({
    routes:{
-      'hello' : "alert_me",
-      '/' : "alert_me"
+      'ivcalc' : "ivcalc"
    },
 
-   alert_me: function(){
-      alert('hello');
+   ivcalc: function(){
+      var view = new IvCalcView({
+         el      : $('#app')
+      });
    }
 });
 
-},{"backbone":2}]},{},[1]);
+module.exports = Router;
+
+},{"./views/IvCalcView":7,"backbone":2,"jquery":4}],7:[function(require,module,exports){
+var Backbone = require('backbone');
+var _ = require('underscore');
+var $ = require('jquery');
+
+
+var IvCalcView = Backbone.View.extend({
+   initialize: function(opts){
+      this.$el.html('');
+      this.IvCalcTemplate = "<form class=\"form-inline\">\n   <div class=\"form-group\">\n      <label for=\"pokemon\">Pokemon</label>\n      <input type=\"text\" class=\"form-control\" id=\"pokemon\" value=\"Bulbasaur\">\n   </div>\n   <div class=\"form-group\">\n      <label for=\"level\">Level</label>\n      <input type=\"text\" class=\"form-control\" id=\"level\" value=\"50\">\n   </div>\n   <div class=\"form-group\">\n      <label for=\"hp-type\">Hidden Power Type</label>\n      <select class=\"form-control\" id=\"hp-type\">\n         <option>Fire</option>\n      </select>\n   </div>\n   <div class=\"form-group\">\n      <label for=\"char\">Characteristic</label>\n      <select class=\"form-control\" id=\"char\">\n         <option>Likes to Thrash about</option>\n      </select>\n   </div>\n</form>\n<table class='table table-condensed'>\n   <thead>\n      <tr>\n         <th>IV Value</th>\n         <th>HP</th>\n         <th>Atk</th>\n         <th>Def</th>\n         <th>SpA</th>\n         <th>SpD</th>\n         <th>Spe</th>\n      </tr>\n   </thead>\n      <tr>\n         <td>31</td>\n         <td>102</td>\n         <td>92</td>\n         <td>152</td>\n         <td>109</td>\n         <td>25</td>\n         <td>231</td>\n      </tr>\n</table>\n";
+      this.render();
+   },
+   events: {
+
+   },
+   render: function(){
+      this.$el.append(_.template(this.IvCalcTemplate));
+   }
+});
+
+module.exports = IvCalcView;
+
+},{"backbone":2,"jquery":4,"underscore":5}]},{},[1]);
