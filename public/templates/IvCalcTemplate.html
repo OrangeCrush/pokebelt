@@ -1,44 +1,73 @@
+<img src="img/<%= pkmn.get('id') %>.png" alt=""></img>
 <form class="form-inline">
    <div class="form-group">
       <label for="pokemon">Pokemon</label>
-      <input type="text" class="form-control" id="pokemon" value="Bulbasaur">
+      <input type="text" class="form-control" id="pokemon" value="<%= pkmn.get('name')%>">
    </div>
    <div class="form-group">
       <label for="level">Level</label>
-      <input type="text" class="form-control" id="level" value="50">
+      <input type="text" class="form-control" id="level" value="<%= pkmn.get('level') || 50 %>">
    </div>
-   <div class="form-group">
+   <!--<div class="form-group">
       <label for="hp-type">Hidden Power Type</label>
-      <select class="form-control" id="hp-type">
-         <option>Fire</option>
+      <select class="form-control resubmit" id="hp-type">
+         <% for(var i in types) {%>
+         <option><%= types[i] %></option>    
+         <% } %>
       </select>
    </div>
    <div class="form-group">
       <label for="char">Characteristic</label>
-      <select class="form-control" id="char">
+      <select class="form-control resubmit" id="char">
          <option>Likes to Thrash about</option>
+      </select>
+      </div>-->
+   <div class="form-group">
+      <label for="char">Nature</label>
+      <select class="form-control resubmit" id="nature">
+         <option><%= pkmn.nature.get('name') %></option>
+         <% for(var nature in natures){ %>
+         <% if(natures[nature] != pkmn.nature.get('name')){ %>
+         <option><%= natures[nature] %></option>
+            <% } %>
+         <% } %>
       </select>
    </div>
 </form>
 <table class='table table-condensed'>
    <thead>
-      <tr>
-         <th>IV Value</th>
-         <th>HP</th>
-         <th>Atk</th>
-         <th>Def</th>
-         <th>SpA</th>
-         <th>SpD</th>
-         <th>Spe</th>
+         <th>Evs:</th>
+         <% for(i in pkmn.stats) {  %>
+            <th><%= pkmn.stats[i] %></th>
+         <% } %>
       </tr>
    </thead>
+   <tbody>
       <tr>
-         <td>31</td>
-         <td>102</td>
-         <td>92</td>
-         <td>152</td>
-         <td>109</td>
-         <td>25</td>
-         <td>231</td>
+         <td></td>
+      <% for(i in pkmn.stats) { %>
+         <td><input type="text" class="form-control resubmit" id="ev-<%=pkmn.stats[i].toLowerCase() %>" value="0"></td>
+         <% } %>
       </tr>
+   </tbody>
+</table>
+<table class='table table-condensed'>
+   <thead>
+      <tr>
+         <th>IV Range</th>
+         <% for(i in pkmn.stats) {  %>
+            <th><%= pkmn.stats[i] %></th>
+         <% } %>
+      </tr>
+   </thead>
+   <tbody>
+      <% for(var i = 0; i < 32; i++ ) { %>
+      <tr>
+         <td><%= 31 - i %></td>
+         <% for(var stat in pkmn.stats) { %>
+         <td><%= pkmn.get(pkmn.stats[stat]) %></td>
+         <% } %>
+      </tr>
+      <% } %>
+   </tbody>
 </table>

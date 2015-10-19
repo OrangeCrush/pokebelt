@@ -3,6 +3,7 @@
    "dependencies": {
       "jquery"    : "latest",
       "backbone"  : "latest",
+      "underscore"  : "latest",
       "browserify": "latest",
       "brfs": "latest"
    }

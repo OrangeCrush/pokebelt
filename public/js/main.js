@@ -1,12 +1,523 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var Backbone   = require('backbone');
 var Router     = require('./router');
+var $          = require('jquery');
+
+$(function(){
+   var router = new Router();
+   Backbone.history.start();
+});
+
+},{"./router":9,"backbone":5,"jquery":7}],2:[function(require,module,exports){
+var Backbone = require('backbone');
+var $ = require('jquery');
+var utils = require('../utils');
+var _ = require('underscore');
+
+/*
+ * Encapsulate a pokemon type
+ *
+ *
+ * var types = new Type({
+ *    name : 'fire'
+ * });
+ * 
+ */
+var NatureModel = Backbone.Model.extend({
+   idAttribute: 'name',
+
+   initialize: function(opts){
+      var self = this;
+      if(!opts){
+         throw "Constructor args can not be null";
+      }else if(opts.name){
+         self.set('name', opts.name.toLowerCase())
+      }
+      this.fetch();
+   },
+
+   sync: function(method,model){
+      switch(method){
+         case 'read': this.getNature(); break;
+      }
+   },
+
+   getNature: function(){
+      var self = this;
+      var attrs = _.select(self.natureData, function(x){
+         return x.name.toLowerCase() == self.get('name');
+      });
+      for(key in attrs[0]){
+         self.set(key, attrs[0][key]);
+      }
+   },
+
+   getModForStat: function(stat){
+      return this.get(stat.toLowerCase());
+   },
+
+   getAllNatures: function(){
+      return this.natureData.map(function(nature){
+         return nature.name;                                            
+      });
+   },
 
 
-var router = new Router();
-Backbone.history.start();
+   natureData: [
+   {
+      "atk": 1.1,
+      "def": 1,
+      "hp": 1,
+      "name": "Adamant",
+      "spa": 0.9,
+      "spd": 1,
+      "spe": 1,
+      "summary": "+Atk, -SpA"
+   },
+   {
+      "atk": 1,
+      "def": 1,
+      "hp": 1,
+      "name": "Bashful",
+      "spa": 1,
+      "spd": 1,
+      "spe": 1,
+      "summary": ""
+   },
+   {
+      "atk": 0.9,
+      "def": 1.1,
+      "hp": 1,
+      "name": "Bold",
+      "spa": 1,
+      "spd": 1,
+      "spe": 1,
+      "summary": "+Def, -Atk"
+   },
+   {
+      "atk": 1.1,
+      "def": 1,
+      "hp": 1,
+      "name": "Brave",
+      "spa": 1,
+      "spd": 1,
+      "spe": 0.9,
+      "summary": "+Atk, -Spe"
+   },
+   {
+      "atk": 0.9,
+      "def": 1,
+      "hp": 1,
+      "name": "Calm",
+      "spa": 1,
+      "spd": 1.1,
+      "spe": 1,
+      "summary": "+SpD, -Atk"
+   },
+   {
+      "atk": 1,
+      "def": 1,
+      "hp": 1,
+      "name": "Careful",
+      "spa": 0.9,
+      "spd": 1.1,
+      "spe": 1,
+      "summary": "+SpD, -SpA"
+   },
+   {
+      "atk": 1,
+      "def": 1,
+      "hp": 1,
+      "name": "Docile",
+      "spa": 1,
+      "spd": 1,
+      "spe": 1,
+      "summary": ""
+   },
+   {
+      "atk": 1,
+      "def": 0.9,
+      "hp": 1,
+      "name": "Gentle",
+      "spa": 1,
+      "spd": 1.1,
+      "spe": 1,
+      "summary": "+SpD, -Def"
+   },
+   {
+      "atk": 1,
+      "def": 1,
+      "hp": 1,
+      "name": "Hardy",
+      "spa": 1,
+      "spd": 1,
+      "spe": 1,
+      "summary": ""
+   },
+   {
+      "atk": 1,
+      "def": 0.9,
+      "hp": 1,
+      "name": "Hasty",
+      "spa": 1,
+      "spd": 1,
+      "spe": 1.1,
+      "summary": "+Spe, -Def"
+   },
+   {
+      "atk": 1,
+      "def": 1.1,
+      "hp": 1,
+      "name": "Impish",
+      "spa": 0.9,
+      "spd": 1,
+      "spe": 1,
+      "summary": "+Def, -SpA"
+   },
+   {
+      "atk": 1,
+      "def": 1,
+      "hp": 1,
+      "name": "Jolly",
+      "spa": 0.9,
+      "spd": 1,
+      "spe": 1.1,
+      "summary": "+Spe, -SpA"
+   },
+   {
+      "atk": 1,
+      "def": 1.1,
+      "hp": 1,
+      "name": "Lax",
+      "spa": 1,
+      "spd": 0.9,
+      "spe": 1,
+      "summary": "+Def, -SpD"
+   },
+   {
+      "atk": 1.1,
+      "def": 0.9,
+      "hp": 1,
+      "name": "Lonely",
+      "spa": 1,
+      "spd": 1,
+      "spe": 1,
+      "summary": "+Atk, -Def"
+   },
+   {
+      "atk": 1,
+      "def": 0.9,
+      "hp": 1,
+      "name": "Mild",
+      "spa": 1.1,
+      "spd": 1,
+      "spe": 1,
+      "summary": "+SpA, -Def"
+   },
+   {
+      "atk": 0.9,
+      "def": 1,
+      "hp": 1,
+      "name": "Modest",
+      "spa": 1.1,
+      "spd": 1,
+      "spe": 1,
+      "summary": "+SpA, -Atk"
+   },
+   {
+      "atk": 1,
+      "def": 1,
+      "hp": 1,
+      "name": "Naive",
+      "spa": 1,
+      "spd": 0.9,
+      "spe": 1.1,
+      "summary": "+Spe, -SpD"
+   },
+   {
+      "atk": 1.1,
+      "def": 1,
+      "hp": 1,
+      "name": "Naughty",
+      "spa": 1,
+      "spd": 0.9,
+      "spe": 1,
+      "summary": "+Atk, -SpD"
+   },
+   {
+      "atk": 1,
+      "def": 1,
+      "hp": 1,
+      "name": "Quiet",
+      "spa": 1.1,
+      "spd": 1,
+      "spe": 0.9,
+      "summary": "+SpA, -Spe"
+   },
+   {
+      "atk": 1,
+      "def": 1,
+      "hp": 1,
+      "name": "Quirky",
+      "spa": 1,
+      "spd": 1,
+      "spe": 1,
+      "summary": ""
+   },
+   {
+      "atk": 1,
+      "def": 1,
+      "hp": 1,
+      "name": "Rash",
+      "spa": 1.1,
+      "spd": 0.9,
+      "spe": 1,
+      "summary": "+SpA, -SpD"
+   },
+   {
+      "atk": 1,
+      "def": 1.1,
+      "hp": 1,
+      "name": "Relaxed",
+      "spa": 1,
+      "spd": 1,
+      "spe": 0.9,
+      "summary": "+Def, -Spe"
+   },
+   {
+      "atk": 1,
+      "def": 1,
+      "hp": 1,
+      "name": "Sassy",
+      "spa": 1,
+      "spd": 1.1,
+      "spe": 0.9,
+      "summary": "+SpD, -Spe"
+   },
+   {
+      "atk": 1,
+      "def": 1,
+      "hp": 1,
+      "name": "Serious",
+      "spa": 1,
+      "spd": 1,
+      "spe": 1,
+      "summary": ""
+   },
+   {
+      "atk": 0.9,
+      "def": 1,
+      "hp": 1,
+      "name": "Timid",
+      "spa": 1,
+      "spd": 1,
+      "spe": 1.1,
+      "summary": "+Spe, -Atk"
+   }]
+});
 
-},{"./router":6,"backbone":2}],2:[function(require,module,exports){
+module.exports = NatureModel;
+
+},{"../utils":10,"backbone":5,"jquery":7,"underscore":8}],3:[function(require,module,exports){
+var Backbone = require('backbone');
+var $ = require('jquery');
+var utils = require('../utils');
+var Nature = require('./Nature');
+
+/*
+ * Encapsulate a single Pokemon.
+ *
+ * Be able to calculate "effective" stats after copying over the
+ * static values from the api.
+ *
+ * Not many of the values are required
+ *
+ * Accept the following fields in the constructor to be copied over to the object.
+ *
+ * var pikapi = new Pokemon({
+ *    name:   'Pikachu', // Required :: String :: The Pokemon to instantiate 
+ *
+ *    iv_hp:  31,  // Optional :: Int :: HP  individual value
+ *    iv_atk: 12,  // Optional :: Int :: ATK individual value
+ *    iv_def: 16,  // Optional :: Int :: DEF individual value
+ *    iv_spa: 29,  // Optional :: Int :: SPA individual value
+ *    iv_spd: 21,  // Optional :: Int :: SPD individual value
+ *    iv_spe: 31,  // Optional :: Int :: SPE individual value
+ *
+ *    ev_hp:  6,   // Optional :: Int :: HP  effort value
+ *    ev_atk: 0,   // Optional :: Int :: ATK effort value
+ *    ev_def: 0,   // Optional :: Int :: DEF effort value
+ *    ev_spa: 252, // Optional :: Int :: SPA effort value
+ *    ev_spd: 0,   // Optional :: Int :: SPD effort value
+ *    ev_spe: 252, // Optional :: Int :: SPE effort value
+ *
+ *    nature : 'timid' // Optional :: String :: Nature
+ *    level  : 'timid' // Optional :: String :: Nature
+ *
+ * });
+ * 
+ */
+var PokemonModel = Backbone.Model.extend({
+   idAttribute: 'id',
+   constructor_attrs: [
+      'ev_hp',  
+      'ev_atk', 
+      'ev_def', 
+      'ev_spa', 
+      'ev_spd', 
+      'ev_spe', 
+      'iv_hp',  
+      'iv_atk', 
+      'iv_def', 
+      'iv_spa', 
+      'iv_spd', 
+      'iv_spe',
+      'level',
+      'nature'
+   ],
+
+   stats: ['hp','atk','def','spa','spd','spe'],
+
+   initialize: function(opts){
+      if(opts.name){
+         this.set('name', opts.name.toLowerCase());
+      }else if(opts.id){
+         this.set('id', opts.id);
+      }else{
+         throw "Must specify name or id when creating a Pokemon";
+      }
+
+      for(var attr in this.constructor_attrs){
+         this.set(this.constructor_attrs[attr], opts[this.constructor_attrs[attr]]);
+      }
+      this.setNature();
+   },
+
+   sync: function(method,model){
+      switch(method){
+         case 'read': this.getPokemon(); break;
+      }
+   },
+
+   getPokemon: function(){
+      var self = this;
+      var url = 'api/v2/pokemon/' + (self.get('id') || self.get('name').toLowerCase());
+      utils.pokeapiCall(url, function(results){
+         for(key in results){
+            self.set(key, results[key]);
+         }
+         self.resolveAllStats();
+         self.trigger('newPkmnData');
+      });
+   },
+
+   getBaseStat: function(stat){
+      return this.get('stats')[{
+         'hp' : 0,
+         'atk': 1,
+         'def': 2,
+         'spa': 3,
+         'spd': 4,
+         'spe': 5
+      }[stat.toLowerCase()]].base_stat;
+   },
+
+   resolveStat: function(stat){
+      stat = stat.toLowerCase();
+      if(stat == "hp"){
+         return Math.floor(((this.get('iv_hp') || 0) + 2 * this.getBaseStat('hp') + (this.get('ev_hp') || 0) / 4 + 100) * this.get('level')  / 100 + 10);
+      }else{
+         var b  = this.getBaseStat(stat);
+         var iv = this['iv_' + stat] || 0;
+         var ev = this['ev_' + stat] || 0;
+         return Math.floor(((iv + 2 * b + ev / 4) * this.get('level') / 100 + 5) * this.nature.getModForStat(stat));
+      }
+   },
+
+   resolveAllStats: function(){
+      for(stat in this.stats){
+         this.set(this.stats[stat], this.resolveStat(this.stats[stat]));
+      }
+   },
+
+   setNature: function(){
+      if(this.get('nature')){
+         this.nature = new Nature({
+            name: this.get('nature')
+         });
+      }
+   }
+});
+
+module.exports = PokemonModel;
+
+},{"../utils":10,"./Nature":2,"backbone":5,"jquery":7}],4:[function(require,module,exports){
+var Backbone = require('backbone');
+var $ = require('jquery');
+var utils = require('../utils');
+
+/*
+ * Encapsulate a pokemon type
+ *
+ *
+ * var types = new Type({
+ *    name : 'fire'
+ * });
+ * 
+ */
+var TypeModel = Backbone.Model.extend({
+   idAttribute: 'name',
+
+   initialize: function(opts){
+      if(!opts){
+         throw "Constructor args can not be null";
+      }else if(opts.name){
+         self.set('name', opts.name)
+      }
+   },
+
+   sync: function(method,model){
+      switch(method){
+         case 'read': this.getType(); break;
+      }
+   },
+
+   getType: function(){
+      var self = this;
+      var url = "api/v2/type/" + self.get('name');
+      utils.pokeapiCall(url, function(results){
+         for(key in results){
+            self.set(key, results[key]);
+         }
+      });
+      self.trigger('newTypeData');
+   },
+
+   allTypes: [
+     'Normal',
+     'Fighting',
+     'Flying',
+     'Poison',
+     'Ground',
+     'Rock',
+     'Bug',
+     'Ghost',
+     'Steel',
+     'Fire',
+     'Water',
+     'Grass',
+     'Electric',
+     'Psychic',
+     'Ice',
+     'Dragon',
+     'Dark',
+     'Fairy'
+   ]
+});
+
+module.exports = TypeModel;
+
+},{"../utils":10,"backbone":5,"jquery":7}],5:[function(require,module,exports){
 (function (global){
 //     Backbone.js 1.2.3
 
@@ -1904,7 +2415,7 @@ Backbone.history.start();
 }));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jquery":4,"underscore":3}],3:[function(require,module,exports){
+},{"jquery":7,"underscore":6}],6:[function(require,module,exports){
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -3454,7 +3965,7 @@ Backbone.history.start();
   }
 }.call(this));
 
-},{}],4:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.1.4
  * http://jquery.com/
@@ -12666,9 +13177,9 @@ return jQuery;
 
 }));
 
-},{}],5:[function(require,module,exports){
-arguments[4][3][0].apply(exports,arguments)
-},{"dup":3}],6:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
+arguments[4][6][0].apply(exports,arguments)
+},{"dup":6}],9:[function(require,module,exports){
 var Backbone   = require('backbone');
 var IvCalcView = require('./views/IvCalcView');
 var $          = require('jquery');
@@ -12687,26 +13198,107 @@ var Router = Backbone.Router.extend({
 
 module.exports = Router;
 
-},{"./views/IvCalcView":7,"backbone":2,"jquery":4}],7:[function(require,module,exports){
+},{"./views/IvCalcView":11,"backbone":5,"jquery":7}],10:[function(require,module,exports){
+var $ = require('jquery');
+
+module.exports = {
+   /*
+    * Nicely decouple api calls anmd error handling with this
+    */
+   pokeapiCall: function(url, done){
+      $.ajax({
+         url: 'http://localhost:8000/' + url
+      }).done(function(results){
+         done(results)
+      }).error(function(err){
+         throw "Error in pokeapiCall - " + err;
+      });
+   }
+
+};
+
+},{"jquery":7}],11:[function(require,module,exports){
 var Backbone = require('backbone');
 var _ = require('underscore');
 var $ = require('jquery');
 
+var Pokemon = require('../models/Pokemon');
+var Type = require('../models/Type');
+var Nature = require('../models/Nature');
 
+/*
+ * Display the IVcalc page
+ *
+ * var ivc = new IvCalcView({
+ *    el        : $('#app'),  // Required :: String :: Element to build in
+ *    showRows  : 10          // Optional :: Int    :: Number of iv rows to show
+ *    pokemon   : 'Pikachu'   // Optional :: String :: Pokemon to start with
+ * });
+ *
+ */
 var IvCalcView = Backbone.View.extend({
    initialize: function(opts){
       this.$el.html('');
-      this.IvCalcTemplate = "<form class=\"form-inline\">\n   <div class=\"form-group\">\n      <label for=\"pokemon\">Pokemon</label>\n      <input type=\"text\" class=\"form-control\" id=\"pokemon\" value=\"Bulbasaur\">\n   </div>\n   <div class=\"form-group\">\n      <label for=\"level\">Level</label>\n      <input type=\"text\" class=\"form-control\" id=\"level\" value=\"50\">\n   </div>\n   <div class=\"form-group\">\n      <label for=\"hp-type\">Hidden Power Type</label>\n      <select class=\"form-control\" id=\"hp-type\">\n         <option>Fire</option>\n      </select>\n   </div>\n   <div class=\"form-group\">\n      <label for=\"char\">Characteristic</label>\n      <select class=\"form-control\" id=\"char\">\n         <option>Likes to Thrash about</option>\n      </select>\n   </div>\n</form>\n<table class='table table-condensed'>\n   <thead>\n      <tr>\n         <th>IV Value</th>\n         <th>HP</th>\n         <th>Atk</th>\n         <th>Def</th>\n         <th>SpA</th>\n         <th>SpD</th>\n         <th>Spe</th>\n      </tr>\n   </thead>\n      <tr>\n         <td>31</td>\n         <td>102</td>\n         <td>92</td>\n         <td>152</td>\n         <td>109</td>\n         <td>25</td>\n         <td>231</td>\n      </tr>\n</table>\n";
-      this.render();
-   },
-   events: {
+
+      // No HP Fairy... 
+      this.types = _.select(new Type({}).allTypes,function(type){
+         return type !== "Fairy";
+      });
+
+      this.natures = new Nature({}).getAllNatures();
+      this.pkmn = new Pokemon({
+         id: Math.ceil((Math.random() * 718)),
+         level: 50,
+         nature: 'adamant'
+      });
+
+      this.pkmn.on('newPkmnData', this.render, this);
+      this.pkmn.fetch();
 
    },
+
+   IvCalcTemplate: _.template("<img src=\"img/<%= pkmn.get('id') %>.png\" alt=\"\"></img>\n<form class=\"form-inline\">\n   <div class=\"form-group\">\n      <label for=\"pokemon\">Pokemon</label>\n      <input type=\"text\" class=\"form-control\" id=\"pokemon\" value=\"<%= pkmn.get('name')%>\">\n   </div>\n   <div class=\"form-group\">\n      <label for=\"level\">Level</label>\n      <input type=\"text\" class=\"form-control\" id=\"level\" value=\"<%= pkmn.get('level') || 50 %>\">\n   </div>\n   <!--<div class=\"form-group\">\n      <label for=\"hp-type\">Hidden Power Type</label>\n      <select class=\"form-control resubmit\" id=\"hp-type\">\n         <% for(var i in types) {%>\n         <option><%= types[i] %></option>    \n         <% } %>\n      </select>\n   </div>\n   <div class=\"form-group\">\n      <label for=\"char\">Characteristic</label>\n      <select class=\"form-control resubmit\" id=\"char\">\n         <option>Likes to Thrash about</option>\n      </select>\n      </div>-->\n   <div class=\"form-group\">\n      <label for=\"char\">Nature</label>\n      <select class=\"form-control resubmit\" id=\"nature\">\n         <option><%= pkmn.nature.get('name') %></option>\n         <% for(var nature in natures){ %>\n         <% if(natures[nature] != pkmn.nature.get('name')){ %>\n         <option><%= natures[nature] %></option>\n            <% } %>\n         <% } %>\n      </select>\n   </div>\n</form>\n<table class='table table-condensed'>\n   <thead>\n         <th>Evs:</th>\n         <% for(i in pkmn.stats) {  %>\n            <th><%= pkmn.stats[i] %></th>\n         <% } %>\n      </tr>\n   </thead>\n   <tbody>\n      <tr>\n         <td></td>\n      <% for(i in pkmn.stats) { %>\n         <td><input type=\"text\" class=\"form-control resubmit\" id=\"ev-<%=pkmn.stats[i].toLowerCase() %>\" value=\"0\"></td>\n         <% } %>\n      </tr>\n   </tbody>\n</table>\n<table class='table table-condensed'>\n   <thead>\n      <tr>\n         <th>IV Range</th>\n         <% for(i in pkmn.stats) {  %>\n            <th><%= pkmn.stats[i] %></th>\n         <% } %>\n      </tr>\n   </thead>\n   <tbody>\n      <% for(var i = 0; i < 32; i++ ) { %>\n      <tr>\n         <td><%= 31 - i %></td>\n         <% for(var stat in pkmn.stats) { %>\n         <td><%= pkmn.get(pkmn.stats[stat]) %></td>\n         <% } %>\n      </tr>\n      <% } %>\n   </tbody>\n</table>\n"),
+
+   events: {
+     'keydown #pokemon'  : 'handleKeydown',
+     'change  .resubmit' : 'calcIvTable'
+   },
+
+   handleKeydown: function(e){
+      var code = e.keycode || e.which;
+      if(code == 13){
+         this.calcIvTable();
+      }
+   },
+
+   calcIvTable: function(e){
+      this.attachPkmnData();
+      this.pkmn.set('name', $('#pokemon').val());
+      this.pkmn.set('id', '');
+      this.pkmn.fetch();
+   },
+
+   attachPkmnData: function(){
+      this.pkmn.set('level', parseInt($('#level').val()));
+      this.pkmn.set('hp_type', $('#hp-type').val());
+      this.pkmn.set('characteristic', $('#char').val());
+      this.pkmn.set('nature', $('#nature').val());
+      this.pkmn.setNature();
+      for(stat in this.pkmn.stats){
+         var statName = 'ev_' + this.pkmn.stats[stat]
+         var statVal = $('#ev-' + this.pkmn.stats[stat]).val();
+         this.pkmn.set(statName, statVal);
+      }
+   },
+
    render: function(){
-      this.$el.append(_.template(this.IvCalcTemplate));
+      console.log(this.pkmn);
+      this.$el.html('');
+      this.$el.append(this.IvCalcTemplate(this));
    }
+
 });
 
 module.exports = IvCalcView;
 
-},{"backbone":2,"jquery":4,"underscore":5}]},{},[1]);
+},{"../models/Nature":2,"../models/Pokemon":3,"../models/Type":4,"backbone":5,"jquery":7,"underscore":8}]},{},[1]);
