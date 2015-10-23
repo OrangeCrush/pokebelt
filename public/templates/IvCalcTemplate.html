@@ -45,8 +45,8 @@
    <tbody>
       <tr>
          <td></td>
-      <% for(i in pkmn.stats) { %>
-         <td><input type="text" class="form-control resubmit" id="ev-<%=pkmn.stats[i].toLowerCase() %>" value="0"></td>
+      <% for(var i in pkmn.stats) { %>
+      <td><input type="text" class="form-control resubmit" id="ev-<%=pkmn.stats[i].toLowerCase() %>" value="<%= pkmn.get('ev_' + stat) || 0 %>"></td>
          <% } %>
       </tr>
    </tbody>
@@ -55,19 +55,22 @@
    <thead>
       <tr>
          <th>IV Range</th>
-         <% for(i in pkmn.stats) {  %>
+         <% for(var i in pkmn.stats) {  %>
             <th><%= pkmn.stats[i] %></th>
          <% } %>
       </tr>
    </thead>
    <tbody>
-      <% for(var i = 0; i < 32; i++ ) { %>
-      <tr>
-         <td><%= 31 - i %></td>
-         <% for(var stat in pkmn.stats) { %>
-         <td><%= pkmn.get(pkmn.stats[stat]) %></td>
-         <% } %>
-      </tr>
+      <% for(var i = 0; ivTable && (i < ivTable.length); i++) { %>
+         <tr>
+            <td><%= 31 - i %></td>
+            <td><%= ivTable[i][0] %></td>
+            <td><%= ivTable[i][1] %></td>
+            <td><%= ivTable[i][2] %></td>
+            <td><%= ivTable[i][3] %></td>
+            <td><%= ivTable[i][4] %></td>
+            <td><%= ivTable[i][5] %></td>
+         </tr>
       <% } %>
    </tbody>
 </table>

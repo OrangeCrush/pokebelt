@@ -107,8 +107,8 @@ var PokemonModel = Backbone.Model.extend({
          return Math.floor(((this.get('iv_hp') || 0) + 2 * this.getBaseStat('hp') + (this.get('ev_hp') || 0) / 4 + 100) * this.get('level')  / 100 + 10);
       }else{
          var b  = this.getBaseStat(stat);
-         var iv = this['iv_' + stat] || 0;
-         var ev = this['ev_' + stat] || 0;
+         var iv = this.get('iv_' + stat) || 0;
+         var ev = this.get('ev_' + stat) || 0;
          return Math.floor(((iv + 2 * b + ev / 4) * this.get('level') / 100 + 5) * this.nature.getModForStat(stat));
       }
    },
