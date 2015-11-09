@@ -3,6 +3,8 @@ MAINTAINER Max Friederichs "max@maxfriederichs.com"
 
 ENV PORT 3000
 
+ADD ./public /root
+
 # Install browserify
 RUN npm install -g browserify
 
@@ -20,3 +22,4 @@ RUN apt-get install -y python
 WORKDIR /root/pokebelt/public
 EXPOSE ${PORT}
 CMD /usr/bin/python -m SimpleHTTPServer ${PORT}
+
