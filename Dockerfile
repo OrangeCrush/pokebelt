@@ -9,7 +9,7 @@ ADD ./public /root
 RUN npm install -g browserify
 
 # Install deps
-WORKDIR /root/pokebelt/public/js
+WORKDIR /root/public/js
 RUN npm install
 
 # Build assets
@@ -19,7 +19,7 @@ RUN browserify -t brfs app.js -o main.js
 RUN apt-get install -y python
 
 # Entrypoint for application
-WORKDIR /root/pokebelt/public
+WORKDIR /root/public
 EXPOSE ${PORT}
 CMD /usr/bin/python -m SimpleHTTPServer ${PORT}
 
