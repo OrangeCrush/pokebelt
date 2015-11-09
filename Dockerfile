@@ -3,7 +3,7 @@ MAINTAINER Max Friederichs "max@maxfriederichs.com"
 
 ENV PORT 3000
 
-ADD ./public /root
+ADD . /root
 
 # Install browserify
 RUN npm install -g browserify
