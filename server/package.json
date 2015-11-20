@@ -1,0 +1,6 @@
+{
+   "name":"Pokebelt",
+   "dependencies":{
+      "express": "latest"
+   }
+}

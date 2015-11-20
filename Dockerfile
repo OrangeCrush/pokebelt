@@ -15,11 +15,9 @@ RUN npm install
 # Build assets
 RUN browserify -t brfs app.js -o main.js
 
-# Install python
-RUN apt-get install -y python
-
 # Entrypoint for application
-WORKDIR /root/public
+WORKDIR /root/server
+RUN npm install
 EXPOSE ${PORT}
-CMD /usr/bin/python -m SimpleHTTPServer ${PORT}
+CMD node /root/server/index.js
 
