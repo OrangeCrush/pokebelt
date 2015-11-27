@@ -93,7 +93,7 @@ var IvCalcView = Backbone.View.extend({
       this.pkmn.setNature();
       for(stat in this.pkmn.stats){
          var statName = 'ev_' + this.pkmn.stats[stat]
-         var statVal = $('#ev-' + this.pkmn.stats[stat]).val();
+         var statVal = $('#ev-' + this.pkmn.stats[stat]).val() || 0;
          this.pkmn.set(statName, statVal);
       }
    },
