@@ -12,7 +12,7 @@ var Nature = require('../models/Nature');
  * var ivc = new IvCalcView({
  *    el        : $('#app'),  // Required :: String :: Element to build in
  *    showRows  : 10          // Optional :: Int    :: Number of iv rows to show
- *    pokemon   : 'Pikachu'   // Optional :: String :: Pokemon to start with
+ *    pkmnid    : 25          // Optional :: Int    :: Pokemon ID to start with
  * });
  *
  * Only refresh the page on a data update event
@@ -29,7 +29,7 @@ var IvCalcView = Backbone.View.extend({
 
       this.natures = new Nature({}).getAllNatures();
       this.pkmn = new Pokemon({
-         id: Math.ceil((Math.random() * 718)),
+         id: opts.pkmnid, 
          level: 50,
          nature: 'adamant',
       });

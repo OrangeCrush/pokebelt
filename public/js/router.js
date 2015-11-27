@@ -4,12 +4,13 @@ var $          = require('jquery');
 
 var Router = Backbone.Router.extend({
    routes:{
-      'ivcalc' : "ivcalc"
+      'ivcalc(/)(:pkmnid)' : "ivcalc",
    },
 
-   ivcalc: function(){
+   ivcalc: function(pkmnid){
       var view = new IvCalcView({
-         el      : $('#app')
+         el      : $('#app'),
+         pkmnid  : pkmnid || Math.ceil((Math.random() * 718)),
       });
    }
 });
