@@ -12,26 +12,24 @@ var Nature = require('../models/Nature');
  * var ivc = new IvCalcView({
  *    el        : $('#app'),  // Required :: String :: Element to build in
  *    showRows  : 10          // Optional :: Int    :: Number of iv rows to show
- *    pkmnid    : 25          // Optional :: Int    :: Pokemon ID to start with
+ *    pkmnid    : 25          // Optional :: Int    :: Pokemon ID to start with. Takes precedence over pkmnname
+ *    pkmnname  : 'Pikachu'   // Optional :: String :: Pokemon to start with
  * });
  *
  * Only refresh the page on a data update event
+ * Changing a pokemon's name passes control to the router
  *
  */
 var IvCalcView = Backbone.View.extend({
    initialize: function(opts){
-      this.$el.html('');
-
-      // No HP Fairy... 
-      this.types = _.select(new Type({}).allTypes,function(type){
-         return type !== "Fairy";
-      });
 
       this.natures = new Nature({}).getAllNatures();
+
       this.pkmn = new Pokemon({
-         id: opts.pkmnid, 
-         level: 50,
-         nature: 'adamant',
+         id     : opts.pkmnid, 
+         name   : opts.pkmnname,
+         level  : 50,
+         nature : 'adamant',
       });
 
       this.pkmn.on('newPkmnData', this.render, this);
@@ -42,28 +40,23 @@ var IvCalcView = Backbone.View.extend({
 
    events: {
      'keydown #pokemon'  : 'handleKeydown',
-     'keydown #level'    : 'handleKeydown',
-     'change  .resubmit' : 'updatePokemonName'
+     'change  .resubmit' : 'render'
    },
 
+   /*
+    * Renavigate the page if a new pokemon is entered
+    */
    handleKeydown: function(e){
       var code = e.keycode || e.which;
       if(code == 13){
-         this.updatePokemonName();
+         e.preventDefault();
+         Backbone.history.navigate('/ivcalc/' + $('#pokemon').val(), true);
       }
    },
 
    /*
-    * Events can call this to kick off a re-read and render
+    * Calucalte the IV table for each IV value
     */
-   updatePokemonName: function(){
-      if($('#pokemon').val()){
-         this.pkmn.set('name', $('#pokemon').val());
-         this.pkmn.set('id', '');
-      }
-      this.pkmn.fetch();
-   },
-
    calcIvTable: function(e){
       this.ivTable = [];
       // Calc status at each IV, store in a table
@@ -83,12 +76,14 @@ var IvCalcView = Backbone.View.extend({
       }
    },
 
+   /*
+    * Attach data in the form the the backbon model
+    * before running any math
+    */
    attachPkmnData: function(){
       if($('#level').val()){
          this.pkmn.set('level', parseInt($('#level').val()));
       }
-      this.pkmn.set('hp_type', $('#hp-type').val());
-      this.pkmn.set('characteristic', $('#char').val());
       this.pkmn.set('nature', $('#nature').val());
       this.pkmn.setNature();
       for(stat in this.pkmn.stats){
@@ -98,6 +93,15 @@ var IvCalcView = Backbone.View.extend({
       }
    },
 
+   /*
+    * 1) Attach the data from the form to the modle
+    * 2) calculate the iv table
+    * 3) Clear whatever is in #app
+    * 4) Append the newly generated html to app
+    *
+    * Only called on a newPkmnData event from Pokemon.js
+    * or a change to any ".resubmit" element
+    */
    render: function(){
       this.attachPkmnData();
       this.calcIvTable();

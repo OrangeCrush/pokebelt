@@ -8,10 +8,17 @@ var Router = Backbone.Router.extend({
    },
 
    ivcalc: function(pkmnid){
-      var view = new IvCalcView({
-         el      : $('#app'),
-         pkmnid  : pkmnid || Math.ceil((Math.random() * 718)),
-      });
+      var params = {
+         el : $('#app')
+      };
+      if(!pkmnid){// Assign a random pokemon if nothing was passed
+         params.pkmnid = Math.ceil((Math.random() * 718));
+      }else if(parseInt(pkmnid)){//assign the id if it was passed
+         params.pkmnid  = pkmnid;
+      }else{//assume a pokemon name was passed in if it can not be parsed into an int
+         params.pkmnname = pkmnid;
+      }
+      return new IvCalcView(params);
    }
 });
 

@@ -60,9 +60,11 @@ var PokemonModel = Backbone.Model.extend({
    initialize: function(opts){
       if(opts.name){
          this.set('name', opts.name.toLowerCase());
-      }else if(opts.id){
+      }
+      if(opts.id){
          this.set('id', opts.id);
-      }else{
+      }
+      if(!(this.get('name') || this.get('id'))){
          throw "Must specify name or id when creating a Pokemon";
       }
 

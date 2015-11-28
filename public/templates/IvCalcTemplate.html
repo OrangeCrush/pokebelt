@@ -6,22 +6,17 @@
    </div>
    <div class="form-group">
       <label for="level">Level</label>
-      <input type="text" class="form-control" id="level" value="<%= pkmn.get('level') || 50 %>">
-   </div>
-   <!--<div class="form-group">
-      <label for="hp-type">Hidden Power Type</label>
-      <select class="form-control resubmit" id="hp-type">
-         <% for(var i in types) {%>
-         <option><%= types[i] %></option>    
+      <select class="form-control resubmit" id="level">
+         <%if(pkmn.get('level')){ %>
+         <option><%=pkmn.get('level')%></option>
+         <%}%>
+         <% for(var i = 0; i < 100; i++){ %>
+            <%if((i + 1) != pkmn.get('level')){%>
+               <option><%= i + 1 %></option>
+            <%}%>
          <% } %>
       </select>
    </div>
-   <div class="form-group">
-      <label for="char">Characteristic</label>
-      <select class="form-control resubmit" id="char">
-         <option>Likes to Thrash about</option>
-      </select>
-      </div>-->
    <div class="form-group">
       <label for="char">Nature</label>
       <select class="form-control resubmit" id="nature">
@@ -46,7 +41,7 @@
       <tr>
          <td></td>
       <% for(var i in pkmn.stats) { %>
-      <td><input type="text" class="form-control resubmit" id="ev-<%=pkmn.stats[i].toLowerCase() %>" value="<%= pkmn.get('ev_' + stat) || 0 %>"></td>
+      <td><input type="text" class="form-control resubmit" id="ev-<%=pkmn.stats[i].toLowerCase() %>" value="<%= pkmn.get('ev_' + pkmn.stats[i].toLowerCase()) || 0 %>"></td>
          <% } %>
       </tr>
    </tbody>
