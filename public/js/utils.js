@@ -18,14 +18,16 @@ module.exports = {
    /*
     * Highlight the tabs on the top of the page
     *
-    * tab :: Int :: 0 based index of the tab to highlight
+    * tab :: Int :: Optional :: 0 based index of the tab to highlight.  Not passing leaves them blank
     */
    updateActiveNav: function(tab){
       var tabs = $('ul.navbar-nav > li')
       for(var i = 0; i < tabs.length; i++ ){
          $(tabs[i]).removeClass('active');
       }
-      $(tabs[tab]).addClass('active');
+      if(parseInt(tab) >= 0){
+         $(tabs[tab]).addClass('active');
+      }
    }
 
 };

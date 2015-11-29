@@ -1,10 +1,19 @@
 var Backbone   = require('backbone');
 var IvCalcView = require('./views/IvCalcView');
+var HomeView   = require('./views/HomeView');
 var $          = require('jquery');
 
 var Router = Backbone.Router.extend({
    routes:{
       'ivcalc(/)(:pkmnid)' : "ivcalc",
+      'home'               : 'home',
+      ''                   : 'home'
+   },
+
+   home: function(){
+      return new HomeView({
+         el : $('#app') 
+      });
    },
 
    ivcalc: function(pkmnid){
