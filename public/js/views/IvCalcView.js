@@ -5,6 +5,7 @@ var fs = require('fs');
 var Pokemon = require('../models/Pokemon');
 var Type = require('../models/Type');
 var Nature = require('../models/Nature');
+var utils = require('../utils');
 
 /*
  * Display the IVcalc page
@@ -22,7 +23,7 @@ var Nature = require('../models/Nature');
  */
 var IvCalcView = Backbone.View.extend({
    initialize: function(opts){
-
+      utils.updateActiveNav(0);
       this.natures = new Nature({}).getAllNatures();
 
       this.pkmn = new Pokemon({
