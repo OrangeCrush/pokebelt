@@ -5,6 +5,7 @@ var fs = require('fs');
 var Pokemon = require('../models/Pokemon');
 var Type = require('../models/Type');
 var Nature = require('../models/Nature');
+var Characteristic = require('../models/Characteristic');
 var utils = require('../utils');
 
 /*
@@ -24,14 +25,17 @@ var utils = require('../utils');
 var IvCalcView = Backbone.View.extend({
    initialize: function(opts){
       utils.updateActiveNav(0);
-      this.natures = new Nature({}).getAllNatures();
+      this.natures         = new Nature({}).getAllNatures();
+      this.characteristics = Characteristic.GetAllCharacteristics();
 
       this.pkmn = new Pokemon({
-         id     : opts.pkmnid, 
-         name   : opts.pkmnname,
-         level  : 50,
-         nature : 'adamant',
+         id             : opts.pkmnid, 
+         name           : opts.pkmnname,
+         level          : 50,
+         nature         : 'adamant',
+         characteristic : ''
       });
+
 
       this.pkmn.on('newPkmnData', this.render, this);
       this.pkmn.fetch();
@@ -104,6 +108,7 @@ var IvCalcView = Backbone.View.extend({
     * or a change to any ".resubmit" element
     */
    render: function(){
+      console.log(this.pkmn);
       this.attachPkmnData();
       this.calcIvTable();
       this.$el.html('');

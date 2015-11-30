@@ -2,6 +2,7 @@ var Backbone = require('backbone');
 var $ = require('jquery');
 var utils = require('../utils');
 var Nature = require('./Nature');
+var Characteristic = require('./Characteristic');
 
 /*
  * Encapsulate a single Pokemon.
@@ -12,8 +13,7 @@ var Nature = require('./Nature');
  * Not many of the values are required
  *
  * Accept the following fields in the constructor to be copied over to the object.
- *
- * var pikapi = new Pokemon({
+ * var pika = new Pokemon({
  *    name:   'Pikachu', // Required :: String :: The Pokemon to instantiate 
  *
  *    iv_hp:  31,  // Optional :: Int :: HP  individual value
@@ -30,8 +30,9 @@ var Nature = require('./Nature');
  *    ev_spd: 0,   // Optional :: Int :: SPD effort value
  *    ev_spe: 252, // Optional :: Int :: SPE effort value
  *
- *    nature : 'timid' // Optional :: String :: Nature
- *    level  : 'timid' // Optional :: String :: Nature
+ *    nature : 'timid'                          // Optional :: String :: Pokemon Nature
+ *    level  : 100                              // Optional :: Int :: Pokemon level
+ *    characteristic  : 'Likes to thrash about' // Optional :: String :: Pokemon characteristic
  *
  * });
  * 
@@ -52,7 +53,8 @@ var PokemonModel = Backbone.Model.extend({
       'iv_spd', 
       'iv_spe',
       'level',
-      'nature'
+      'nature',
+      'characteristic'
    ],
 
    stats: ['hp','atk','def','spa','spd','spe'],
@@ -72,6 +74,7 @@ var PokemonModel = Backbone.Model.extend({
          this.set(this.constructor_attrs[attr], opts[this.constructor_attrs[attr]]);
       }
       this.setNature();
+      this.setCharacteristic();
    },
 
    sync: function(method,model){
@@ -125,6 +128,14 @@ var PokemonModel = Backbone.Model.extend({
       if(this.get('nature')){
          this.nature = new Nature({
             name: this.get('nature')
+         });
+      }
+   },
+
+   setCharacteristic: function(){
+      if(this.get('characteristic')){
+         this.characteristic = new Characteristic({
+            name: this.get('characteristic') 
          });
       }
    }
