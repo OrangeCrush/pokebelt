@@ -139,6 +139,16 @@ var PokemonModel = Backbone.Model.extend({
          });
       }
    }
+},{
+   GetAllPokemonNames: function(next){
+      utils.pokeapiCall('api/v2/pokemon', {
+         'limit': 9999
+      },function(results){
+         next(results.results.map(function(pkmn){
+            return pkmn.name;
+         }));
+      });
+   }
 });
 
 module.exports = PokemonModel;
