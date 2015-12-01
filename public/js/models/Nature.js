@@ -7,8 +7,8 @@ var _ = require('underscore');
  * Encapsulate a pokemon type
  *
  *
- * var types = new Type({
- *    name : 'fire'
+ * var nature = new Nature({
+ *    name : 'adamant'
  * });
  * 
  */
