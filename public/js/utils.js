@@ -4,10 +4,11 @@ module.exports = {
    /*
     * Nicely decouple api calls anmd error handling with this
     */
-   pokeapiCall: function(url, done){
+   pokeapiCall: function(url, data, done){
       host = window.location.hostname;
       $.ajax({
-         url: 'http://' + host + ':8000/' + url
+         url: 'http://' + host + ':8000/' + url,
+         data: data
       }).done(function(results){
          done(results)
       }).error(function(err){

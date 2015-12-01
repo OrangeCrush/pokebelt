@@ -86,7 +86,7 @@ var PokemonModel = Backbone.Model.extend({
    getPokemon: function(){
       var self = this;
       var url = 'api/v2/pokemon/' + (self.get('id') || self.get('name').toLowerCase());
-      utils.pokeapiCall(url, function(results){
+      utils.pokeapiCall(url, {}, function(results){
          for(key in results){
             self.set(key, results[key]);
          }

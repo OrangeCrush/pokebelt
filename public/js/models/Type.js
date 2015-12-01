@@ -31,7 +31,7 @@ var TypeModel = Backbone.Model.extend({
    getType: function(){
       var self = this;
       var url = "api/v2/type/" + self.get('name');
-      utils.pokeapiCall(url, function(results){
+      utils.pokeapiCall(url, {}, function(results){
          for(key in results){
             self.set(key, results[key]);
          }
@@ -39,26 +39,16 @@ var TypeModel = Backbone.Model.extend({
       self.trigger('newTypeData');
    },
 
-   allTypes: [
-     'Normal',
-     'Fighting',
-     'Flying',
-     'Poison',
-     'Ground',
-     'Rock',
-     'Bug',
-     'Ghost',
-     'Steel',
-     'Fire',
-     'Water',
-     'Grass',
-     'Electric',
-     'Psychic',
-     'Ice',
-     'Dragon',
-     'Dark',
-     'Fairy'
-   ]
+},{
+   GetAllTypeNames: function(next){
+      utils.pokeapiCall('api/v2/type',{
+         'limit': 99999
+      },function(results){
+         next(results.results.map(function(type){
+            return type.name;
+         }));
+      });
+   }
 });
 
 module.exports = TypeModel;

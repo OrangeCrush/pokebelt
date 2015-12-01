@@ -6,6 +6,7 @@ var Pokemon = require('../models/Pokemon');
 var Type = require('../models/Type');
 var Nature = require('../models/Nature');
 var Characteristic = require('../models/Characteristic');
+var Type = require('../models/Type');
 var utils = require('../utils');
 
 /*
@@ -108,7 +109,6 @@ var IvCalcView = Backbone.View.extend({
     * or a change to any ".resubmit" element
     */
    render: function(){
-      console.log(this.pkmn);
       this.attachPkmnData();
       this.calcIvTable();
       this.$el.html('');
