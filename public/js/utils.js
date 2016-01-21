@@ -6,7 +6,7 @@ module.exports = {
     */
    pokeapiCall: function(url, data, done){
       host = window.location.hostname;
-      $.ajax({
+      return $.ajax({
          url: 'http://' + host + ':8000/' + url,
          data: data
       }).done(function(results){

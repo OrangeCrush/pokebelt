@@ -25,9 +25,23 @@ var utils = require('../utils');
  */
 var IvCalcView = Backbone.View.extend({
    initialize: function(opts){
+      var self = this;
       utils.updateActiveNav(0);
-      this.natures         = new Nature({}).getAllNatures();
-      this.characteristics = Characteristic.GetAllCharacteristics();
+
+      /*
+       * Get a list of all natures in the database
+       */
+      Nature.GetAllNatures(function(natures){
+         self.natures = natures;
+      });
+
+
+      /*
+       * Get a list of all the characteristics in the database
+       */
+      Characteristic.GetAllCharacteristics(function(characteristics){
+         self.characteristics = characteristics;
+      });
 
       this.pkmn = new Pokemon({
          id             : opts.pkmnid, 
@@ -37,38 +51,69 @@ var IvCalcView = Backbone.View.extend({
          characteristic : ''
       });
 
+      // On a name change, fetch new data
+      this.pkmn.on('change:name', this.pkmn.fetch, this.pkmn);
+   
+      // On these fields changing, re-render the view
+      this.pkmn.on('change:level',          this.render, this);
+      this.pkmn.on('change:ev_hp',          this.render, this);
+      this.pkmn.on('change:ev_atk',         this.render, this);
+      this.pkmn.on('change:ev_def',         this.render, this);
+      this.pkmn.on('change:ev_spa',         this.render, this);
+      this.pkmn.on('change:ev_spd',         this.render, this);
+      this.pkmn.on('change:ev_spe',         this.render, this);
 
-      this.pkmn.on('newPkmnData', this.render, this);
+      this.pkmn.on('newPkmnData',               this.render, this);
+      this.pkmn.on('newPkmnCharacteristicData', this.render, this);
+      this.pkmn.on('newPkmnNatureData',         this.render, this);
       this.pkmn.fetch();
    },
 
    IvCalcTemplate: _.template(fs.readFileSync(__dirname + '/../../templates/IvCalcTemplate.html', 'utf8')),
 
+   /*
+    * Set the appropriate data when form fields change
+    */
    events: {
      'keydown #pokemon'  : 'handleKeydown',
-     'change  .resubmit' : 'render'
+     'change  .resubmit' : 'updateData',
    },
 
    /*
-    * Renavigate the page if a new pokemon is entered
+    * Fire on any change event from .resubmit elements.
+    * Update the "data-stat" value to the val of the element.
+    * Cast anything to an integer that looks like one
+    *
+    * Handle special cases (nature, characteristic) first
+    */
+   updateData: function(e){
+      this.pkmn.set($(e.target).data('attr'), parseInt($(e.target).val()) || $(e.target).val());
+   },
+
+   /*
+    * Set the according element on the model,
+    * and add a history event to the router.
     */
    handleKeydown: function(e){
       var code = e.keycode || e.which;
       if(code == 13){
          e.preventDefault();
-         Backbone.history.navigate('/ivcalc/' + $('#pokemon').val(), true);
+         Backbone.history.navigate('/ivcalc/' + $('#pokemon').val());
+         this.pkmn.set('id', null);
+         this.pkmn.set('name', $('#pokemon').val());
       }
    },
 
    /*
-    * Calucalte the IV table for each IV value
+    * Calculate the IV table for each IV value
     */
    calcIvTable: function(e){
       this.ivTable = [];
       // Calc status at each IV, store in a table
       for(var i = 0; i < 32; i++){
          for(stat in this.pkmn.stats){
-            this.pkmn.set('iv_' + this.pkmn.stats[stat], 31 - i);
+            // We don't want to trigger a change with this set
+            this.pkmn.set('iv_' + this.pkmn.stats[stat], 31 - i, { silent: true });
          }
          this.pkmn.resolveAllStats();
          this.ivTable.push([
@@ -83,33 +128,14 @@ var IvCalcView = Backbone.View.extend({
    },
 
    /*
-    * Attach data in the form the the backbon model
-    * before running any math
-    */
-   attachPkmnData: function(){
-      if($('#level').val()){
-         this.pkmn.set('level', parseInt($('#level').val()));
-      }
-      this.pkmn.set('nature', $('#nature').val());
-      this.pkmn.setNature();
-      for(stat in this.pkmn.stats){
-         var statName = 'ev_' + this.pkmn.stats[stat]
-         var statVal = $('#ev-' + this.pkmn.stats[stat]).val() || 0;
-         this.pkmn.set(statName, statVal);
-      }
-   },
-
-   /*
-    * 1) Attach the data from the form to the modle
-    * 2) calculate the iv table
-    * 3) Clear whatever is in #app
-    * 4) Append the newly generated html to app
+    * 1) calculate the iv table
+    * 2) Clear whatever is in #app
+    * 3) Append the newly generated html to app
     *
     * Only called on a newPkmnData event from Pokemon.js
     * or a change to any ".resubmit" element
     */
    render: function(){
-      this.attachPkmnData();
       this.calcIvTable();
       this.$el.html('');
       this.$el.append(this.IvCalcTemplate(this));

@@ -11,6 +11,7 @@ var utils = require('../utils');
  *
  */
 var CharacteristicModel = Backbone.Model.extend({
+   idAttribute : 'name',
    initialize: function(opts){
       if(!opts){
          throw "Constructor args can not be null.";
@@ -30,7 +31,13 @@ var CharacteristicModel = Backbone.Model.extend({
       }
    },
 
-   idAttribute : 'name',
+   sync: function(){
+      switch(method){
+         case 'read':
+            this.getCharacteristicData();
+      }
+   }
+
 },{
 // Class data
    GetAllCharacteristics: function(){

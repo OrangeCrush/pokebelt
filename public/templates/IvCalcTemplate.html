@@ -2,24 +2,23 @@
 <form class="form-inline">
    <div class="form-group">
       <label for="pokemon">Pokemon</label>
-      <input type="text" class="form-control" id="pokemon" value="<%= pkmn.get('name')%>">
+      <input type="text" data-attr="name" class="form-control" id="pokemon" value="<%= pkmn.get('name')%>">
    </div>
    <div class="form-group">
       <label for="level">Level</label>
-      <select class="form-control resubmit" id="level">
-         <%if(pkmn.get('level')){ %>
-         <option><%=pkmn.get('level')%></option>
-         <%}%>
+      <select data-attr="level" class="form-control resubmit" id="level">
          <% for(var i = 0; i < 100; i++){ %>
-            <%if((i + 1) != pkmn.get('level')){%>
+            <% if((i + 1) == pkmn.get('level')){ %>
+               <option selected="selected"><%= i + 1 %></option>
+            <% }else{ %>
                <option><%= i + 1 %></option>
-            <%}%>
+            <% } %>
          <% } %>
       </select>
    </div>
    <div class="form-group">
       <label for="nature">Nature</label>
-      <select class="form-control resubmit" id="nature">
+      <select data-attr="nature" class="form-control resubmit" id="nature">
          <option><%= pkmn.nature.get('name') %></option>
          <% for(var nature in natures){ %>
          <% if(natures[nature] != pkmn.nature.get('name')){ %>
@@ -30,10 +29,7 @@
    </div>
    <div class="form-group">
       <label for="char">Characteristic</label>
-      <select class="form-control resubmit" id="char">
-         <% for(var chara in characteristics){ %>
-            <option><%= characteristics[chara] %></option>
-         <% } %>
+      <select data-attr="characteristic" class="form-control resubmit" id="char">
       </select>
    </div>
 </form>
@@ -49,7 +45,7 @@
       <tr>
          <td></td>
       <% for(var i in pkmn.stats) { %>
-      <td><input type="text" class="form-control resubmit" id="ev-<%=pkmn.stats[i].toLowerCase() %>" value="<%= pkmn.get('ev_' + pkmn.stats[i].toLowerCase()) || 0 %>"></td>
+      <td><input data-attr="<%= 'ev_' + pkmn.stats[i].toLowerCase() %>" type="text" class="form-control resubmit" id="ev-<%=pkmn.stats[i].toLowerCase() %>" value="<%= pkmn.get('ev_' + pkmn.stats[i].toLowerCase()) || 0 %>"></td>
          <% } %>
       </tr>
    </tbody>
@@ -77,3 +73,4 @@
       <% } %>
    </tbody>
 </table>
+

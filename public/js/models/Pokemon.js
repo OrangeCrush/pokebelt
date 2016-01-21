@@ -39,6 +39,10 @@ var Characteristic = require('./Characteristic');
  */
 var PokemonModel = Backbone.Model.extend({
    idAttribute: 'id',
+
+   /*
+    * All these attributes will be copied over
+    */
    constructor_attrs: [
       'ev_hp',  
       'ev_atk', 
@@ -59,7 +63,12 @@ var PokemonModel = Backbone.Model.extend({
 
    stats: ['hp','atk','def','spa','spd','spe'],
 
+   /*
+    * See above for constructor usage
+    */
    initialize: function(opts){
+      var self = this;
+
       if(opts.name){
          this.set('name', opts.name.toLowerCase());
       }
@@ -73,28 +82,94 @@ var PokemonModel = Backbone.Model.extend({
       for(var attr in this.constructor_attrs){
          this.set(this.constructor_attrs[attr], opts[this.constructor_attrs[attr]]);
       }
-      this.setNature();
-      this.setCharacteristic();
+
+      this.nature = new Nature({
+         name: self.get('nature')
+      });
+
+      this.characteristic = new Characteristic({
+         name: self.get('characteristic')
+      });
+
+      this.on('change:nature',         this.getNatureForPokemon, this);
+      this.on('change:characteristic', this.getCharacteristicForPokemon, this);
+      this.nature.on('newNatureData',  this.triggerNature, this);
    },
 
+   triggerNature: function(){
+      this.trigger('newPkmnNatureData');
+   },
+
+   /*
+    * Override backbones Model#fetch method
+    *
+    * Get all of the data that could be attached to this pokemon
+    */
    sync: function(method,model){
       switch(method){
-         case 'read': this.getPokemon(); break;
+         case 'read': 
+            this.getAllPokemonData();
       }
    },
 
-   getPokemon: function(){
+   /*
+    * Make api calls to get characteristic data, nature data, and pokemon data
+    *
+    * When these delegate, resolve all stats on the pokemon and fire the newPkmnData event.
+    */
+   getAllPokemonData: function(){
       var self = this;
-      var url = 'api/v2/pokemon/' + (self.get('id') || self.get('name').toLowerCase());
-      utils.pokeapiCall(url, {}, function(results){
-         for(key in results){
-            self.set(key, results[key]);
-         }
+      $.when(self.getPokemon(), self.getNatureForPokemon()).done(function(){
          self.resolveAllStats();
          self.trigger('newPkmnData');
       });
    },
 
+   /*
+    * GET /api/v2/pokemon/(id|name)
+    * id will have preference over name so if you are only
+    * changing the name on the model and expect this to get new
+    * pokemon data, set id to null
+    */
+   getPokemon: function(){
+      var self = this;
+      var url = 'api/v2/pokemon/' + (self.get('id') || self.get('name').toLowerCase()) + '/';
+      return utils.pokeapiCall(url, {}, function(results){
+         for(key in results){
+            self.set(key, results[key], {silent: true});
+         }
+         self.trigger('newPkmnStatData');
+      });
+   },
+
+   /*
+    * Get the nature data for the pokemon by calling Nature#fetch
+    *
+    * 'nature' needs to be set to something
+    */
+   getNatureForPokemon: function(){
+      var self = this;
+      self.nature.set('name', self.get('nature'))
+      return self.nature.fetch();
+   },
+
+   /*
+    * Get the characteristic data for the pokemon by calling Characteristic#fetch
+    */
+   getCharacteristicForPokemon: function(){
+      var self = this;
+      self.characteristic = new Characteristic({
+         name: self.get('characteristic')
+      }).fetch({
+         success: function(){
+            self.trigger('newPkmnCharacteristicData', data);
+         }
+      });
+   },
+
+   /*
+    * Return the base stat for this pokemon that was passed
+    */
    getBaseStat: function(stat){
       return this.get('stats')[{
          'hp' : 0,
@@ -106,6 +181,9 @@ var PokemonModel = Backbone.Model.extend({
       }[stat.toLowerCase()]].base_stat;
    },
 
+   /*
+    * Calcualte the passed stat for this Pokemon
+    */
    resolveStat: function(stat){
       stat = stat.toLowerCase();
       if(stat == "hp"){
@@ -118,27 +196,15 @@ var PokemonModel = Backbone.Model.extend({
       }
    },
 
-   resolveAllStats: function(){
+   /*
+    * Calculate actual stats from ev's / iv's / nature / level / base stats
+    */
+   resolveAllStats: function(trigger){
       for(stat in this.stats){
-         this.set(this.stats[stat], this.resolveStat(this.stats[stat]));
-      }
-   },
-
-   setNature: function(){
-      if(this.get('nature')){
-         this.nature = new Nature({
-            name: this.get('nature')
-         });
-      }
-   },
-
-   setCharacteristic: function(){
-      if(this.get('characteristic')){
-         this.characteristic = new Characteristic({
-            name: this.get('characteristic') 
-         });
+         this.set(this.stats[stat], this.resolveStat(this.stats[stat]),{silent: !trigger});
       }
    }
+
 },{
    GetAllPokemonNames: function(next){
       utils.pokeapiCall('api/v2/pokemon', {
