@@ -4,7 +4,7 @@ var utils = require('../utils');
 var _ = require('underscore');
 
 /*
- * Encapsulate a pokemon type
+ * Encapsulate a Pokemon Nature
  *
  *
  * var nature = new Nature({
@@ -17,6 +17,7 @@ var NatureModel = Backbone.Model.extend({
 
    initialize: function(opts){
       var self = this;
+      self.set('trigger', true);
       if(!opts){
          throw "Constructor args can not be null";
       }else if(opts.name){
@@ -24,9 +25,9 @@ var NatureModel = Backbone.Model.extend({
       }
    },
 
-   sync: function(method,model){
+   sync: function(method, model){
       switch(method){
-         case 'read': this.getNature(); break;
+         case 'read': return this.getNature();
       }
    },
 
@@ -38,7 +39,9 @@ var NatureModel = Backbone.Model.extend({
             self.set(key, results[key], {silent: true});
          }
          self.normalizeMod();
-         self.trigger('newNatureData');
+         if(self.get('trigger')){
+            self.trigger('newNatureData');
+         }
       });
    },
 

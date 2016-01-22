@@ -35,7 +35,6 @@ var IvCalcView = Backbone.View.extend({
          self.natures = natures;
       });
 
-
       /*
        * Get a list of all the characteristics in the database
        */
@@ -62,10 +61,11 @@ var IvCalcView = Backbone.View.extend({
       this.pkmn.on('change:ev_spa',         this.render, this);
       this.pkmn.on('change:ev_spd',         this.render, this);
       this.pkmn.on('change:ev_spe',         this.render, this);
+      this.pkmn.on('newPkmnData',           this.render, this);
 
-      this.pkmn.on('newPkmnData',               this.render, this);
-      this.pkmn.on('newPkmnCharacteristicData', this.render, this);
-      this.pkmn.on('newPkmnNatureData',         this.render, this);
+      this.pkmn.characteristic.on('newCharacteristicData', this.render, this);
+      this.pkmn.nature.on('newNatureData', this.render, this);
+
       this.pkmn.fetch();
    },
 
@@ -140,7 +140,6 @@ var IvCalcView = Backbone.View.extend({
       this.$el.html('');
       this.$el.append(this.IvCalcTemplate(this));
    }
-
 });
 
 module.exports = IvCalcView;

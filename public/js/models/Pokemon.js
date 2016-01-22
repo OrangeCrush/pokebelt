@@ -35,7 +35,16 @@ var Characteristic = require('./Characteristic');
  *    characteristic  : 'Likes to thrash about' // Optional :: String :: Pokemon characteristic
  *
  * });
+ *
+ * Events:
+ *    newPkmnData : Trigger when ALL resources are finished fetching for this Pokemon
+ *
+ * SubModels:
+ *    this.get('nature') // Name of the nature
+ *    this.nature        // Points to Nature model instance, updated on change:nature
  * 
+ *    this.get('characteristic') // Name of the characteristic
+ *    this.characteristic        // Points to Characteristic model instance, updated on change:characteristic
  */
 var PokemonModel = Backbone.Model.extend({
    idAttribute: 'id',
@@ -93,11 +102,6 @@ var PokemonModel = Backbone.Model.extend({
 
       this.on('change:nature',         this.getNatureForPokemon, this);
       this.on('change:characteristic', this.getCharacteristicForPokemon, this);
-      this.nature.on('newNatureData',  this.triggerNature, this);
-   },
-
-   triggerNature: function(){
-      this.trigger('newPkmnNatureData');
    },
 
    /*
@@ -119,8 +123,18 @@ var PokemonModel = Backbone.Model.extend({
     */
    getAllPokemonData: function(){
       var self = this;
+
+      // Supress sub model events
+      self.nature.set('trigger',         false);
+      self.characteristic.set('trigger', false);
+
       $.when(self.getPokemon(), self.getNatureForPokemon()).done(function(){
          self.resolveAllStats();
+
+         // Re-enable submodel triggers
+         self.nature.set('trigger',         true);
+         self.characteristic.set('trigger', true);
+
          self.trigger('newPkmnData');
       });
    },
@@ -138,7 +152,6 @@ var PokemonModel = Backbone.Model.extend({
          for(key in results){
             self.set(key, results[key], {silent: true});
          }
-         self.trigger('newPkmnStatData');
       });
    },
 
@@ -148,23 +161,16 @@ var PokemonModel = Backbone.Model.extend({
     * 'nature' needs to be set to something
     */
    getNatureForPokemon: function(){
-      var self = this;
-      self.nature.set('name', self.get('nature'))
-      return self.nature.fetch();
+      this.nature.set('name', this.get('nature'))
+      return this.nature.fetch();
    },
 
    /*
     * Get the characteristic data for the pokemon by calling Characteristic#fetch
     */
    getCharacteristicForPokemon: function(){
-      var self = this;
-      self.characteristic = new Characteristic({
-         name: self.get('characteristic')
-      }).fetch({
-         success: function(){
-            self.trigger('newPkmnCharacteristicData', data);
-         }
-      });
+      this.characteristic.set('name', this.get('characteristic'))
+      return this.characteristic.fetch();
    },
 
    /*
