@@ -19,10 +19,11 @@
    <div class="form-group">
       <label for="nature">Nature</label>
       <select data-attr="nature" class="form-control resubmit" id="nature">
-         <option><%= pkmn.nature.get('name') %></option>
-         <% for(var nature in natures){ %>
-         <% if(natures[nature] != pkmn.nature.get('name')){ %>
-         <option><%= natures[nature] %></option>
+         <% for(var nature in natures.sort()){ %>
+            <% if(natures[nature] == pkmn.nature.get('name')){ %>
+               <option selected="selected"><%= natures[nature] %></option>
+            <% } else { %>
+               <option><%= natures[nature] %></option>
             <% } %>
          <% } %>
       </select>
