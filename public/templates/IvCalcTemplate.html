@@ -2,7 +2,16 @@
 <form class="form-inline">
    <div class="form-group">
       <label for="pokemon">Pokemon</label>
-      <input type="text" data-attr="name" class="form-control" id="pokemon" value="<%= pkmn.get('name')%>">
+      <select data-attr="name" class="form-control resubmit" id="pokemon">
+         <% for(var pkmnName in pokemon.sort()){ %>
+            <% if(pokemon[pkmnName] == pkmn.get('name')){ %>
+               <option selected="selected"><%= pokemon[pkmnName] %></option>
+            <% } else { %>
+               <option><%= pokemon[pkmnName] %></option>
+            <% } %>
+         <% } %>
+      </select>
+      <!--<input type="text" data-attr="name" class="form-control" id="pokemon" value="<%= pkmn.get('name')%>">-->
    </div>
    <div class="form-group">
       <label for="level">Level</label>

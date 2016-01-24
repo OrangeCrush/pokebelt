@@ -28,6 +28,10 @@ var IvCalcView = Backbone.View.extend({
       var self = this;
       utils.updateActiveNav(0);
 
+      Pokemon.GetAllPokemonNames(function(pokemon){
+         self.pokemon = pokemon;
+      })
+
       /*
        * Get a list of all natures in the database
        */
