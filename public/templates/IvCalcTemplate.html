@@ -11,7 +11,6 @@
             <% } %>
          <% } %>
       </select>
-      <!--<input type="text" data-attr="name" class="form-control" id="pokemon" value="<%= pkmn.get('name')%>">-->
    </div>
    <div class="form-group">
       <label for="level">Level</label>
@@ -40,6 +39,13 @@
    <div class="form-group">
       <label for="char">Characteristic</label>
       <select data-attr="characteristic" class="form-control resubmit" id="char">
+         <% for(var chara in characteristics.sort()){ %>
+            <% if(characteristics[chara] == pkmn.characteristic.get('name')){ %>
+               <option selected="selected"><%= characteristics[chara] %></option>
+            <% } else { %>
+               <option><%= characteristics[chara] %></option>
+            <% } %>
+         <% } %>
       </select>
    </div>
 </form>

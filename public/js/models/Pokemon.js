@@ -112,7 +112,7 @@ var PokemonModel = Backbone.Model.extend({
     *
     * Get all of the data that could be attached to this pokemon
     */
-   sync: function(method,model){
+   sync: function(method){
       switch(method){
          case 'read': 
             this.getAllPokemonData();
@@ -132,6 +132,8 @@ var PokemonModel = Backbone.Model.extend({
       self.nature.set('trigger',         false);
       self.characteristic.set('trigger', false);
 
+      // This is async for now (no API call inmplemented in pokeapi)
+      self.getCharacteristicForPokemon();
       $.when(self.getPokemon(), self.getNatureForPokemon()).done(function(){
          self.resolveAllStats();
 

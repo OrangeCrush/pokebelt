@@ -28,6 +28,9 @@ var IvCalcView = Backbone.View.extend({
       var self = this;
       utils.updateActiveNav(0);
 
+      /*
+       * Get a list of all Pokemon in the database
+       */
       Pokemon.GetAllPokemonNames(function(pokemon){
          self.pokemon = pokemon;
       })
@@ -51,18 +54,18 @@ var IvCalcView = Backbone.View.extend({
          name           : opts.pkmnname,
          level          : 50,
          nature         : 'adamant',
-         characteristic : ''
+         characteristic : 'Alert to sounds'
       });
 
       // On these fields changing, re-render the view
-      this.pkmn.on('change:level',          this.render, this);
-      this.pkmn.on('change:ev_hp',          this.render, this);
-      this.pkmn.on('change:ev_atk',         this.render, this);
-      this.pkmn.on('change:ev_def',         this.render, this);
-      this.pkmn.on('change:ev_spa',         this.render, this);
-      this.pkmn.on('change:ev_spd',         this.render, this);
-      this.pkmn.on('change:ev_spe',         this.render, this);
-      this.pkmn.on('newPkmnData',           this.render, this);
+      this.pkmn.on('change:level',  this.render, this);
+      this.pkmn.on('change:ev_hp',  this.render, this);
+      this.pkmn.on('change:ev_atk', this.render, this);
+      this.pkmn.on('change:ev_def', this.render, this);
+      this.pkmn.on('change:ev_spa', this.render, this);
+      this.pkmn.on('change:ev_spd', this.render, this);
+      this.pkmn.on('change:ev_spe', this.render, this);
+      this.pkmn.on('newPkmnData',   this.render, this);
 
       this.pkmn.characteristic.on('newCharacteristicData', this.render, this);
       this.pkmn.nature.on('newNatureData',                 this.render, this);

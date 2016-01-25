@@ -15,40 +15,41 @@ var CharacteristicModel = Backbone.Model.extend({
    initialize: function(opts){
       if(!opts){
          throw "Constructor args can not be null.";
-      }else if(opts.name){
-         var chars = this.CharacteristicData.map(function(characteristic){
-            return opts.name.toLowerCase() == characteristic.name.toLowerCase();
-         });
-
-         // Set data if a valid characteristic was found
-         // Do not throw an exception so that other
-         // methods about characteristics can still be used
-         if(chars.length == 1){
-            self.set('name', chars[0].name);
-            self.set('stat', chars[0].stat);
-            self.set('ivs',  chars[0].ivs);
-         }
       }
+      this.set('name', opts.name.toLowerCase());
    },
 
-   sync: function(){
+   sync: function(method){
       switch(method){
          case 'read':
             this.getCharacteristicData();
+      }
+   },
+
+   getCharacteristicData: function(){
+      var self = this;
+      var chars = CharacteristicModel.CharacteristicData.map(function(characteristic){
+         return self.get('name') == characteristic.name.toLowerCase();
+      });
+
+      if(chars.length == 1){
+         self.set('name', chars[0].name);
+         self.set('stat', chars[0].stat);
+         self.set('ivs',  chars[0].ivs);
       }
    }
 
 },{
 // Class data
-   GetAllCharacteristics: function(){
-      return this.CharacteristicData.map(function(x){
+   GetAllCharacteristics: function(next){
+      next(this.CharacteristicData.map(function(x){
          return x.name;
-      });
+      }));
    },
 
    /*
-    * pokeapi does not serve characteristic data so
-    * once again I find myself mindlessly hard coding this
+    * Mindlessly hardcoding this until I can PR
+    * to pokeapi to put name's in the resource request
     */
    CharacteristicData:[
       {
