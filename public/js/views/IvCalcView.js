@@ -54,9 +54,6 @@ var IvCalcView = Backbone.View.extend({
          characteristic : ''
       });
 
-      // On a name change, fetch new data
-      this.pkmn.on('change:name', this.pkmn.fetch, this.pkmn);
-   
       // On these fields changing, re-render the view
       this.pkmn.on('change:level',          this.render, this);
       this.pkmn.on('change:ev_hp',          this.render, this);
@@ -68,7 +65,8 @@ var IvCalcView = Backbone.View.extend({
       this.pkmn.on('newPkmnData',           this.render, this);
 
       this.pkmn.characteristic.on('newCharacteristicData', this.render, this);
-      this.pkmn.nature.on('newNatureData', this.render, this);
+      this.pkmn.nature.on('newNatureData',                 this.render, this);
+      this.pkmn.on('newPkmnStatData',                      this.render, this);
 
       this.pkmn.fetch();
    },

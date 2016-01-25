@@ -102,6 +102,9 @@ var PokemonModel = Backbone.Model.extend({
 
       this.on('change:nature',         this.getNatureForPokemon, this);
       this.on('change:characteristic', this.getCharacteristicForPokemon, this);
+      this.on('change:name',           this.getPokemonByName, this);
+      this.on('change:id',             this.getPokemonById, this);
+   
    },
 
    /*
@@ -125,6 +128,7 @@ var PokemonModel = Backbone.Model.extend({
       var self = this;
 
       // Supress sub model events
+      self.set('trigger',                false);
       self.nature.set('trigger',         false);
       self.characteristic.set('trigger', false);
 
@@ -132,6 +136,7 @@ var PokemonModel = Backbone.Model.extend({
          self.resolveAllStats();
 
          // Re-enable submodel triggers
+         self.set('trigger',                true);
          self.nature.set('trigger',         true);
          self.characteristic.set('trigger', true);
 
@@ -141,18 +146,35 @@ var PokemonModel = Backbone.Model.extend({
 
    /*
     * GET /api/v2/pokemon/(id|name)
-    * id will have preference over name so if you are only
-    * changing the name on the model and expect this to get new
-    * pokemon data, set id to null
+    * id has precedence over name if you call this funciton by itself.
+    *
+    * If you want to grab data by setting name or id, call the other methods below
     */
-   getPokemon: function(){
+   getPokemon: function(key){
       var self = this;
-      var url = 'api/v2/pokemon/' + (self.get('id') || self.get('name').toLowerCase()) + '/';
+      var url = 'api/v2/pokemon/' + (key || self.get('id') || self.get('name').toLowerCase()) + '/';
       return utils.pokeapiCall(url, {}, function(results){
          for(key in results){
             self.set(key, results[key], {silent: true});
          }
+         if(self.get('trigger')){
+            self.trigger('newPkmnStatData');
+         }
       });
+   },
+
+   /*
+    * Wrapper to force refreshing by name
+    */
+   getPokemonByName: function(){
+      this.getPokemon(this.get('name'))
+   },
+
+   /*
+    * Wrapper to force refreshing by Id
+    */
+   getPokemonById: function(){
+      this.getPokemonById(this.get('id'));
    },
 
    /*
