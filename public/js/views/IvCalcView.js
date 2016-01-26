@@ -92,19 +92,8 @@ var IvCalcView = Backbone.View.extend({
     */
    updateData: function(e){
       this.pkmn.set($(e.target).data('attr'), parseInt($(e.target).val()) || $(e.target).val());
-   },
-
-   /*
-    * Set the according element on the model,
-    * and add a history event to the router.
-    */
-   handleKeydown: function(e){
-      var code = e.keycode || e.which;
-      if(code == 13){
-         e.preventDefault();
+      if($(e.target).data('attr') == 'name'){
          Backbone.history.navigate('/ivcalc/' + $('#pokemon').val());
-         this.pkmn.set('id', null);
-         this.pkmn.set('name', $('#pokemon').val());
       }
    },
 
