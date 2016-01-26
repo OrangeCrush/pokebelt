@@ -80,7 +80,6 @@ var IvCalcView = Backbone.View.extend({
     * Set the appropriate data when form fields change
     */
    events: {
-     'keydown #pokemon'  : 'handleKeydown',
      'change  .resubmit' : 'updateData',
    },
 
