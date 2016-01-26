@@ -8,3 +8,8 @@ body {
    background-position: center; 
    padding: 0px;
 }
+
+.strike {
+   text-decoration: line-through;
+   color: red;
+}

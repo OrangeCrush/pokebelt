@@ -79,12 +79,12 @@
       <% for(var i = 0; ivTable && (i < ivTable.length); i++) { %>
          <tr>
             <td><%= 31 - i %></td>
-            <td><%= ivTable[i][0] %></td>
-            <td><%= ivTable[i][1] %></td>
-            <td><%= ivTable[i][2] %></td>
-            <td><%= ivTable[i][3] %></td>
-            <td><%= ivTable[i][4] %></td>
-            <td><%= ivTable[i][5] %></td>
+            <td class="<%= charTable[i][0] ? 'strike' : '' %>"><%= ivTable[i][0] %></td>
+            <td class="<%= charTable[i][1] ? 'strike' : '' %>"><%= ivTable[i][1] %></td>
+            <td class="<%= charTable[i][2] ? 'strike' : '' %>"><%= ivTable[i][2] %></td>
+            <td class="<%= charTable[i][3] ? 'strike' : '' %>"><%= ivTable[i][3] %></td>
+            <td class="<%= charTable[i][4] ? 'strike' : '' %>"><%= ivTable[i][4] %></td>
+            <td class="<%= charTable[i][5] ? 'strike' : '' %>"><%= ivTable[i][5] %></td>
          </tr>
       <% } %>
    </tbody>

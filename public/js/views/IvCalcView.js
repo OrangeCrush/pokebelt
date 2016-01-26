@@ -54,7 +54,7 @@ var IvCalcView = Backbone.View.extend({
          name           : opts.pkmnname,
          level          : 50,
          nature         : 'adamant',
-         characteristic : 'Alert to sounds'
+         characteristic : 'A little quick tempered'
       });
 
       // On these fields changing, re-render the view
@@ -129,6 +129,21 @@ var IvCalcView = Backbone.View.extend({
             this.pkmn.get('spd'),
             this.pkmn.get('spe')
          ]);
+      }
+
+      //Store the strikeouts as boolean from the characteristic in a paralell table 
+      this.charTable = [];
+      if(this.pkmn.get('characteristic') != ''){
+         for(var i = 0; i < 32; i++){
+            this.charTable.push([])
+            for(var stat in this.pkmn.stats){
+               if(this.pkmn.characteristic.get('ivs').indexOf(i) != -1 && this.pkmn.stats[stat] == this.pkmn.characteristic.get('stat')){
+                  this.charTable[i].push(true)
+               }else{
+                  this.charTable[i].push(false);
+               }
+            }
+         }
       }
    },
 

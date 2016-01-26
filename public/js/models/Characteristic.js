@@ -28,14 +28,17 @@ var CharacteristicModel = Backbone.Model.extend({
 
    getCharacteristicData: function(){
       var self = this;
-      var chars = CharacteristicModel.CharacteristicData.map(function(characteristic){
-         return self.get('name') == characteristic.name.toLowerCase();
+      var chars = CharacteristicModel.CharacteristicData.filter(function(characteristic){
+         return self.get('name').toLowerCase() == characteristic.name.toLowerCase();
       });
 
       if(chars.length == 1){
          self.set('name', chars[0].name);
          self.set('stat', chars[0].stat);
          self.set('ivs',  chars[0].ivs);
+      }
+      if(self.get('trigger')){
+         self.trigger('newCharacteristicData');
       }
    }
 
