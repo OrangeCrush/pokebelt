@@ -39,6 +39,11 @@
    <div class="form-group">
       <label for="char">Characteristic</label>
       <select data-attr="characteristic" class="form-control resubmit" id="char">
+         <% if(pkmn.characteristic.get('name') == ''){ %>
+            <option selected="selected"></option>
+         <% } else { %>
+            <option></option>
+         <% } %>
          <% for(var chara in characteristics.sort()){ %>
             <% if(characteristics[chara] == pkmn.characteristic.get('name')){ %>
                <option selected="selected"><%= characteristics[chara] %></option>
@@ -79,12 +84,12 @@
       <% for(var i = 0; ivTable && (i < ivTable.length); i++) { %>
          <tr>
             <td><%= 31 - i %></td>
-            <td class="<%= charTable[i][0] ? 'strike' : '' %>"><%= ivTable[i][0] %></td>
-            <td class="<%= charTable[i][1] ? 'strike' : '' %>"><%= ivTable[i][1] %></td>
-            <td class="<%= charTable[i][2] ? 'strike' : '' %>"><%= ivTable[i][2] %></td>
-            <td class="<%= charTable[i][3] ? 'strike' : '' %>"><%= ivTable[i][3] %></td>
-            <td class="<%= charTable[i][4] ? 'strike' : '' %>"><%= ivTable[i][4] %></td>
-            <td class="<%= charTable[i][5] ? 'strike' : '' %>"><%= ivTable[i][5] %></td>
+            <td class="<%= charTable.length > 0 ? charTable[i][0] : '' %>"><%= ivTable[i][0] %></td>
+            <td class="<%= charTable.length > 0 ? charTable[i][1] : '' %>"><%= ivTable[i][1] %></td>
+            <td class="<%= charTable.length > 0 ? charTable[i][2] : '' %>"><%= ivTable[i][2] %></td>
+            <td class="<%= charTable.length > 0 ? charTable[i][3] : '' %>"><%= ivTable[i][3] %></td>
+            <td class="<%= charTable.length > 0 ? charTable[i][4] : '' %>"><%= ivTable[i][4] %></td>
+            <td class="<%= charTable.length > 0 ? charTable[i][5] : '' %>"><%= ivTable[i][5] %></td>
          </tr>
       <% } %>
    </tbody>
