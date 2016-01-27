@@ -32,17 +32,19 @@ var NatureModel = Backbone.Model.extend({
    },
 
    getNature: function(){
-      var self = this;
-      var url = 'api/v2/nature/' + self.get('name') + '/';
-      return utils.pokeapiCall(url, {}, function(results){
-         for(key in results){
-            self.set(key, results[key], {silent: true});
-         }
-         self.normalizeMod();
-         if(self.get('trigger')){
-            self.trigger('newNatureData');
-         }
-      });
+      if(this.get('name')){
+         var self = this;
+         var url = 'api/v2/nature/' + self.get('name') + '/';
+         return utils.pokeapiCall(url, {}, function(results){
+            for(key in results){
+               self.set(key, results[key], {silent: true});
+            }
+            self.normalizeMod();
+            if(self.get('trigger')){
+               self.trigger('newNatureData');
+            }
+         });
+      }
    },
 
    normalizeMod: function(){

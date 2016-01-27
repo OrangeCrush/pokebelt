@@ -1,5 +1,6 @@
 var Backbone = require('backbone');
 var $ = require('jquery');
+var _ = require('underscore');
 var utils = require('../utils');
 var Nature = require('./Nature');
 var Characteristic = require('./Characteristic');
@@ -89,7 +90,11 @@ var PokemonModel = Backbone.Model.extend({
       }
 
       for(var attr in this.constructor_attrs){
-         this.set(this.constructor_attrs[attr], opts[this.constructor_attrs[attr]]);
+         if(!opts[this.constructor_attrs[attr]]){
+            this.set(this.constructor_attrs[attr], '');
+         }else{
+            this.set(this.constructor_attrs[attr], opts[this.constructor_attrs[attr]]);
+         }
       }
 
       this.nature = new Nature({
@@ -169,7 +174,7 @@ var PokemonModel = Backbone.Model.extend({
     * Wrapper to force refreshing by name
     */
    getPokemonByName: function(){
-      this.getPokemon(this.get('name'))
+      this.getPokemon(this.get('name').toLowerCase());
    },
 
    /*
@@ -232,6 +237,16 @@ var PokemonModel = Backbone.Model.extend({
    resolveAllStats: function(trigger){
       for(stat in this.stats){
          this.set(this.stats[stat], this.resolveStat(this.stats[stat]),{silent: !trigger});
+      }
+   },
+
+   getAvailableMoveNames: function(){
+      if(this.get('moves')){
+         return _.uniq(this.get('moves').map(function(mv){
+            return utils.capitalizePkmn(mv.move.name).replace('-',' ');
+         }).sort());
+      }else{
+         return [];
       }
    }
 

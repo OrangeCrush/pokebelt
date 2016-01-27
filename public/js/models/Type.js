@@ -42,11 +42,11 @@ var TypeModel = Backbone.Model.extend({
 },{
    GetAllTypeNames: function(next){
       utils.pokeapiCall('api/v2/type',{
-         'limit': 99999
+         'limit': 9999
       },function(results){
          next(results.results.map(function(type){
             return type.name;
-         }));
+         }).sort());
       });
    }
 });
