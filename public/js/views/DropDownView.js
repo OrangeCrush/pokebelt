@@ -18,6 +18,7 @@ var fs = require('fs');
  *   selected : 'bulbasaur'          // Optional :: String     :: Specify the selected element
  *   label    : Pokemon              // Optional :: String     :: <label> value to use above the select
  *   optional : true                 // Optional :: bool       :: Make the dropdown have an empty value
+ *   bind     : this                 // Optional :: Obj        :: call src binded to the passed object
  * });
  *
  * Events:
@@ -30,6 +31,7 @@ var DropDownView = Backbone.View.extend({
       this.selected = '';
       this.label    = '';
       this.optional = false;
+      this.bind     = this;
       _.extend(this, opts)
    },
 
@@ -44,6 +46,7 @@ var DropDownView = Backbone.View.extend({
             self.trigger('newDropDownData');
          });
       }
+      return this;
    },
 
    DropDownTemplate: _.template(fs.readFileSync(__dirname + '/../../templates/DropDownTemplate.html', 'utf8')),
