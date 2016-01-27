@@ -124,7 +124,7 @@ var IvCalcView = Backbone.View.extend({
          for(var i = 0; i < 32; i++){
             this.charTable.push([])
             for(var stat in this.pkmn.stats){
-               if(this.pkmn.characteristic.get('ivs').indexOf(i) != -1 && this.pkmn.stats[stat] == this.pkmn.characteristic.get('stat')){
+               if(this.pkmn.characteristic.get('ivs').indexOf(31 - i) == -1 && this.pkmn.stats[stat] == this.pkmn.characteristic.get('stat')){
                   this.charTable[i].push('strike')
                }else{
                   this.charTable[i].push('');
