@@ -3,10 +3,8 @@ var _ = require('underscore');
 var $ = require('jquery');
 var fs = require('fs');
 var Pokemon = require('../models/Pokemon');
-var Type = require('../models/Type');
 var Nature = require('../models/Nature');
 var Characteristic = require('../models/Characteristic');
-var Type = require('../models/Type');
 var utils = require('../utils');
 
 /*
