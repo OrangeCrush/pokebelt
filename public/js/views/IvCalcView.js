@@ -5,6 +5,7 @@ var fs = require('fs');
 var Pokemon = require('../models/Pokemon');
 var Nature = require('../models/Nature');
 var Characteristic = require('../models/Characteristic');
+var DropDownView = require('./DropDownView');
 var utils = require('../utils');
 
 /*
@@ -26,19 +27,32 @@ var IvCalcView = Backbone.View.extend({
       var self = this;
       utils.updateActiveNav(0);
 
-      /*
-       * Get a list of all Pokemon in the database
-       */
-      Pokemon.GetAllPokemonNames(function(pokemon){
-         self.pokemon = pokemon;
-      })
-
-      /*
-       * Get a list of all natures in the database
-       */
-      Nature.GetAllNatures(function(natures){
-         self.natures = natures;
+      this.pkmnDropDown = new DropDownView({
+         src     : Pokemon.GetAllPokemonNames,
+         id      : 'pokemon',
+         el      : '#pkmndd',
+         classes : 'form-control resubmit',
+         label   : 'Pokemon',
+         data: {
+            attr : 'name'
+         }
       });
+      this.pkmnDropDown.refresh();
+      this.pkmnDropDown.on('newDropDownData', this.pkmnDropDown.render, this.pkmnDropDown);
+
+      this.natDropDown = new DropDownView({
+         src      : Nature.GetAllNatures,
+         id       : 'nature' ,
+         el       : '#naturedd',
+         classes  : 'form-control resubmit',
+         label    : 'Nature',
+         selected : 'Adamant',
+         data: {
+            attr: 'nature'
+         }
+      });
+      this.natDropDown.refresh();
+      this.natDropDown.on('newDropDownData', this.natDropDown.render, this.natDropDown);
 
       /*
        * Get a list of all the characteristics in the database
@@ -139,11 +153,18 @@ var IvCalcView = Backbone.View.extend({
     *
     * Only called on a newPkmnData event from Pokemon.js
     * or a change to any ".resubmit" element
+    *
     */
    render: function(){
       this.calcIvTable();
       this.$el.html('');
       this.$el.append(this.IvCalcTemplate(this));
+
+      this.pkmnDropDown.selected = this.pkmn.get('name');
+      this.pkmnDropDown.setElement('#pkmndd').render();
+
+      this.natDropDown.selected = this.pkmn.get('nature');
+      this.natDropDown.setElement('#naturedd').render();
    }
 });
 
