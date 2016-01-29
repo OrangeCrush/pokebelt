@@ -1,0 +1,13 @@
+<%console.log(label)%>
+<% if(label != ''){ %>
+<label><%= label %></label>
+<% } %>
+<select class="<%= classes %>" id="<%= id %>">
+   <% for(var i = 0; i < list.length; i++){ %>
+      <% if(selected.toLowerCase() == list[i].toLowerCase()){ %>
+      <option selected="selected"><%= list[i] %></option>
+      <% }else{ %>
+      <option><%= list[i] %></option>
+      <% } %>
+   <% } %>
+</select>
