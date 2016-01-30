@@ -1,4 +1,15 @@
+/*
+ * Extend any protoypes (IE) string or write uselful functions here
+ */
 var $ = require('jquery');
+
+String.prototype.capitalize = function(){
+   if(this.length == 0){
+      return this;
+   }else{
+      return this[0].toUpperCase() + this.split('').splice(1,this.length).join('');
+   }
+}
 
 module.exports = {
    /*
@@ -29,6 +40,18 @@ module.exports = {
       if(parseInt(tab) >= 0){
          $(tabs[tab]).addClass('active');
       }
+   },
+
+   /*
+    * Capitalize the pokemon names...
+    * gengar-mega        -> Gengar-Mega
+    * charizard-mega-x   -> Charizard-Mega-X
+    * vaporeon           -> Vaporeon
+    */
+   capitalizePkmn: function(name){
+      return name.split('-').map(function(nm){
+         return nm.capitalize();
+      }).join('-');
    }
 
 };

@@ -112,7 +112,7 @@ var IvCalcView = Backbone.View.extend({
     * Handle special cases (nature, characteristic) first
     */
    updateData: function(e){
-      this.pkmn.set($(e.target).data('attr'), parseInt($(e.target).val()) || $(e.target).val());
+      this.pkmn.set($(e.target).data('attr'), parseInt($(e.target).val()) || $(e.target).val().toLowerCase());
       if($(e.target).data('attr') == 'name'){
          Backbone.history.navigate('/ivcalc/' + $('#pokemon').val());
       }

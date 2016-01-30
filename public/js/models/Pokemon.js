@@ -241,7 +241,7 @@ var PokemonModel = Backbone.Model.extend({
          'limit': 9999
       },function(results){
          next(results.results.map(function(pkmn){
-            return pkmn.name;
+            return utils.capitalizePkmn(pkmn.name);
          }));
       });
    }

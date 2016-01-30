@@ -74,7 +74,7 @@ var NatureModel = Backbone.Model.extend({
          'limit' : 9999
       },function(results){
          next(results.results.map(function(nature){
-            return nature.name;
+            return nature.name.capitalize();
          }));
       });
    }
