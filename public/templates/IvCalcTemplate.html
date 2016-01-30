@@ -16,22 +16,7 @@
    </div>
    <div id="naturedd" class="form-group">
    </div>
-   <div class="form-group">
-      <label for="char">Characteristic</label>
-      <select data-attr="characteristic" class="form-control resubmit" id="char">
-         <% if(pkmn.characteristic.get('name') == ''){ %>
-            <option selected="selected"></option>
-         <% } else { %>
-            <option></option>
-         <% } %>
-         <% for(var chara in characteristics.sort()){ %>
-            <% if(characteristics[chara] == pkmn.characteristic.get('name')){ %>
-               <option selected="selected"><%= characteristics[chara] %></option>
-            <% } else { %>
-               <option><%= characteristics[chara] %></option>
-            <% } %>
-         <% } %>
-      </select>
+   <div id="chardd" class="form-group">
    </div>
 </form>
 <table class='table table-condensed'>

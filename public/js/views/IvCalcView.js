@@ -54,12 +54,21 @@ var IvCalcView = Backbone.View.extend({
       this.natDropDown.refresh();
       this.natDropDown.on('newDropDownData', this.natDropDown.render, this.natDropDown);
 
-      /*
-       * Get a list of all the characteristics in the database
-       */
-      Characteristic.GetAllCharacteristics(function(characteristics){
-         self.characteristics = characteristics;
+
+      this.charDropDown = new DropDownView({
+         src      : Characteristic.GetAllCharacteristics,
+         id       : 'characteristic',
+         el       : '#chardd',
+         classes  : 'form-control resubmit',
+         label    : 'Characteristic',
+         optional : true,
+         data: {
+            attr: 'characteristic'
+         }
       });
+      this.charDropDown.refresh();
+      this.charDropDown.on('newDropDownData', this.charDropDown.render, this.charDropDown);
+
 
       this.pkmn = new Pokemon({
          id             : opts.pkmnid, 
@@ -165,6 +174,9 @@ var IvCalcView = Backbone.View.extend({
 
       this.natDropDown.selected = this.pkmn.get('nature');
       this.natDropDown.setElement('#naturedd').render();
+
+      this.charDropDown.selected = this.pkmn.get('characteristic');
+      this.charDropDown.setElement('#chardd').render();
    }
 });
 

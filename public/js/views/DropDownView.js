@@ -17,6 +17,7 @@ var fs = require('fs');
  *   attr     : {attr: name, move:1} // Optional :: Obj        :: Add data-attr="name" and data-move="1" to the select
  *   selected : 'bulbasaur'          // Optional :: String     :: Specify the selected element
  *   label    : Pokemon              // Optional :: String     :: <label> value to use above the select
+ *   optional : true                 // Optional :: bool       :: Make the dropdown have an empty value
  * });
  *
  * Events:
@@ -28,6 +29,7 @@ var DropDownView = Backbone.View.extend({
       this.list     = [];
       this.selected = '';
       this.label    = '';
+      this.optional = false;
       _.extend(this, opts)
    },
 

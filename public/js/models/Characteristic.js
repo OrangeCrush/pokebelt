@@ -45,7 +45,7 @@ var CharacteristicModel = Backbone.Model.extend({
 },{
 // Class data
    GetAllCharacteristics: function(next){
-      next(this.CharacteristicData.map(function(x){
+      next(CharacteristicModel.CharacteristicData.map(function(x){
          return x.name;
       }));
    },

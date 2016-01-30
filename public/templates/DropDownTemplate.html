@@ -1,8 +1,14 @@
-<%console.log(label)%>
 <% if(label != ''){ %>
 <label><%= label %></label>
 <% } %>
 <select class="<%= classes %>" id="<%= id %>">
+   <% if(optional){ %>
+      <% if(selected == ''){%>
+      <option selected="selected"></option>
+      <% }else{ %>
+      <option></option>
+      <% } %>
+   <% } %>
    <% for(var i = 0; i < list.length; i++){ %>
       <% if(selected.toLowerCase() == list[i].toLowerCase()){ %>
       <option selected="selected"><%= list[i] %></option>
