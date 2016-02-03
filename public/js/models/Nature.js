@@ -75,7 +75,7 @@ var NatureModel = Backbone.Model.extend({
       },function(results){
          next(results.results.map(function(nature){
             return nature.name.capitalize();
-         }));
+         }).sort());
       });
    }
 });
