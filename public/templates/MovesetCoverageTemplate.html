@@ -11,4 +11,27 @@
    <div id="move4dd" class="form-group">
    </div>
 </form>
-
+<table>
+   <tbody>
+      <tr>
+         <td></td>
+      <% var y = 0; %>
+      <% for(var type in types){ %>
+            <td><img src="img/<%= types[type] %>.gif"></img></td>
+      <% } %>
+      <% for(var type in types){ %>
+         <tr>
+            <td><img src="img/<%= types[type] %>.gif"><img></td>
+            <% var x = 0; %>
+            <% for(var type in types){ %>
+               <% if(y >= x) { %>
+               <td title="<%= coverageTableMoves[x][y] %>"><%= coverageTable[x++][y] %></td>
+               <%} else {%>
+               <td></td>
+               <% } %>
+            <% } %>
+            <% y++ %>
+         </tr>
+      <% } %>
+   </tbody>
+</table>

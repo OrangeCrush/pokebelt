@@ -5,6 +5,7 @@ var fs = require('fs');
 var DropDownView = require('./DropDownView');
 var Pokemon = require('../models/Pokemon');
 var Type = require('../models/Type');
+var Move = require('../models/Move');
 var utils = require('../utils');
 
 /*
@@ -17,11 +18,29 @@ var MovesetCoverageView = Backbone.View.extend({
       utils.updateActiveNav(1);
 
       // The familiar this.pkmn PokemonModel
+      //
+      // Store move names as a .set
+      // Store move objects as .move[1234]
+      //
       this.pkmn = new Pokemon({
          id             : opts.pkmnid, 
          name           : opts.pkmnname
       });
 
+      for(var i = 0; i < 4; i++){
+         this.pkmn.moves[i].on('newMoveData', this.render, this);
+      }
+      this.pkmn.on('newPkmnStatData', this.setDefaultMoves, this);
+      this.pkmn.on('newPkmnStatData', this.render, this);
+      this.pkmn.on('newPkmnData',     this.render, this);
+      // Only fetch the Pokemon data (which includes the moveset)
+      // We can't fetch the moves yet because we only
+      // want to fetch the default list of moves (see the issue?)
+      this.pkmn.getPokemon().done(function(){
+         self.setDefaultMoves();
+      });
+
+      // Pokemon name dropdown
       this.pkmnDropDown = new DropDownView({
          src : Pokemon.GetAllPokemonNames,
          id  : 'pokemon',
@@ -52,9 +71,25 @@ var MovesetCoverageView = Backbone.View.extend({
          this.moveDropDowns[i].on('newDropDownData', this.moveDropDowns[i].render, this.moveDropDowns[i]);
       }
 
-      this.pkmn.on('newPkmnStatData', this.render, this);
-      this.pkmn.on('newPkmnData',     this.render, this);
-      this.pkmn.fetch();
+      // Get all of the type names and data
+      this.types             = [];
+      this.typeModels        = [];
+      this.typeModelPromises = [];
+
+      Type.GetAllTypeNames(function(types){
+         self.types = types;
+         //
+         //Get all of the type data
+         for(var i = 0; i < self.types.length; i++){
+            self.typeModels.push(new Type({
+               name: self.types[i]
+            }));
+            self.typeModelPromises.push(self.typeModels[i].fetch());
+         }
+         $.when.apply($, self.typeModelPromises).done(function(){
+            self.render();
+         });
+      });
    },
 
    MovesetCoverageTemplate: _.template(fs.readFileSync(__dirname + '/../../templates/MovesetCoverageTemplate.html', 'utf8')),
@@ -67,11 +102,12 @@ var MovesetCoverageView = Backbone.View.extend({
     * Handle UI events for changing pokemon or moves
     */
    updateModels: function(e){
+      var self = this;
       if($(e.target).data('attr') == 'pokemon'){
          this.pkmn.set('name', $(e.target).val());
          Backbone.history.navigate('/movecov/' + $('#pokemon').val());
       }else{
-
+         this.pkmn.set($(e.target).data('attr'), $(e.target).val());
       }
    },
 
@@ -81,8 +117,56 @@ var MovesetCoverageView = Backbone.View.extend({
    renderMoves: function(){
       for(var i = 0; i < 4; i++){
          this.moveDropDowns[i].src      = this.pkmn.getAvailableMoveNames();
-         this.moveDropDowns[i].selected = this.pkmn.getAvailableMoveNames()[i]
+         this.moveDropDowns[i].selected = this.pkmn.get('move' + (i + 1)) || '';
          this.moveDropDowns[i].refresh().setElement('#move' + (i + 1) + 'dd').render();
+      }
+   },
+
+   /*
+    * All of the pokemon logic to build this 
+    * bomb ass moveset coverage table
+    */
+   buildCoverageTable: function(){
+      var self = this;
+      this.coverageTable      = [];
+      this.coverageTableMoves = [];
+      for(var y in this.typeModels){
+         var row = [];
+         var rowMoves = [];
+         for(var x in this.typeModels){
+            var best     = undefined;
+            var bestMove = undefined;
+            for(var mv in this.pkmn.moves){
+               if(this.pkmn.moves[mv].get('type') && this.pkmn.moves[mv].get('power')){
+                  var mod1 = this.typeModels[y].getDefMod(self.pkmn.moves[mv].get('type').name);
+                  var mod2 = this.typeModels[x].getDefMod(self.pkmn.moves[mv].get('type').name);
+                  var finalmod = mod1 * mod2;
+                  if(this.typeModels[x].get('name') == this.typeModels[y].get('name')){
+                     finalmod = mod1;
+                  }
+                  if((best == undefined) || (finalmod > best)){
+                     best     = finalmod;
+                     bestMove = this.pkmn.moves[mv].get('name')
+                  }
+               }
+            }
+            row.push(best);
+            rowMoves.push(bestMove || '');
+         }
+         this.coverageTable.push(row);
+         this.coverageTableMoves.push(rowMoves);
+      }
+   },
+
+   /*
+    * Set the default moves for a pokemon
+    */
+   setDefaultMoves: function(){
+      var moves = this.pkmn.getAvailableMoveNames();
+      for(var i = 0; (i < moves.length) && (i < 4); i++){
+         this.pkmn.set('move' + (i + 1), moves[i], {silent: true});
+         this.pkmn.moves[i].set('name', moves[i]);
+         this.pkmn.moves[i].fetch();
       }
    },
 
@@ -94,6 +178,7 @@ var MovesetCoverageView = Backbone.View.extend({
     */
    render: function(){
       this.$el.html('');
+      this.buildCoverageTable();
       this.$el.append(this.MovesetCoverageTemplate(this));
       this.renderMoves();
       this.pkmnDropDown.selected = this.pkmn.get('name');

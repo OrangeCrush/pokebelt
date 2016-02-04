@@ -34,7 +34,7 @@ var NatureModel = Backbone.Model.extend({
    getNature: function(){
       if(this.get('name')){
          var self = this;
-         var url = 'api/v2/nature/' + self.get('name') + '/';
+         var url = 'api/v2/nature/' + self.get('name').toLowerCase() + '/';
          return utils.pokeapiCall(url, {}, function(results){
             for(key in results){
                self.set(key, results[key], {silent: true});

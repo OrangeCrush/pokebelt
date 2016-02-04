@@ -4,6 +4,7 @@ var _ = require('underscore');
 var utils = require('../utils');
 var Nature = require('./Nature');
 var Characteristic = require('./Characteristic');
+var Move = require('./Move');
 
 /*
  * Encapsulate a single Pokemon.
@@ -50,27 +51,6 @@ var Characteristic = require('./Characteristic');
 var PokemonModel = Backbone.Model.extend({
    idAttribute: 'id',
 
-   /*
-    * All these attributes will be copied over
-    */
-   constructor_attrs: [
-      'ev_hp',  
-      'ev_atk', 
-      'ev_def', 
-      'ev_spa', 
-      'ev_spd', 
-      'ev_spe', 
-      'iv_hp',  
-      'iv_atk', 
-      'iv_def', 
-      'iv_spa', 
-      'iv_spd', 
-      'iv_spe',
-      'level',
-      'nature',
-      'characteristic'
-   ],
-
    stats: ['hp','atk','def','spa','spd','spe'],
 
    /*
@@ -78,6 +58,9 @@ var PokemonModel = Backbone.Model.extend({
     */
    initialize: function(opts){
       var self = this;
+
+      _.extend(this, opts)
+      this.set('trigger', true);
 
       if(opts.name){
          this.set('name', opts.name.toLowerCase());
@@ -89,27 +72,30 @@ var PokemonModel = Backbone.Model.extend({
          throw "Must specify name or id when creating a Pokemon";
       }
 
-      for(var attr in this.constructor_attrs){
-         if(!opts[this.constructor_attrs[attr]]){
-            this.set(this.constructor_attrs[attr], '');
-         }else{
-            this.set(this.constructor_attrs[attr], opts[this.constructor_attrs[attr]]);
-         }
-      }
-
       this.nature = new Nature({
-         name: self.get('nature')
+         name: self.get('nature') || ''
       });
 
       this.characteristic = new Characteristic({
-         name: self.get('characteristic')
+         name: self.get('characteristic') || ''
       });
+
+      this.moves = [];
+      for(var i = 0; i < 4; i++){
+         this.moves.push(new Move({
+            name: self.get('move' + (i + 1)) || '' 
+         }));
+      }
 
       this.on('change:nature',         this.getNatureForPokemon, this);
       this.on('change:characteristic', this.getCharacteristicForPokemon, this);
       this.on('change:name',           this.getPokemonByName, this);
       this.on('change:id',             this.getPokemonById, this);
-   
+      this.on('change:move1',          function(){ return this.getMove(1) }, this);
+      this.on('change:move2',          function(){ return this.getMove(2) }, this);
+      this.on('change:move3',          function(){ return this.getMove(3) }, this);
+      this.on('change:move4',          function(){ return this.getMove(4) }, this);
+
    },
 
    /*
@@ -120,7 +106,7 @@ var PokemonModel = Backbone.Model.extend({
    sync: function(method){
       switch(method){
          case 'read': 
-            this.getAllPokemonData();
+            return this.getAllPokemonData();
       }
    },
 
@@ -136,24 +122,49 @@ var PokemonModel = Backbone.Model.extend({
       self.set('trigger',                false);
       self.nature.set('trigger',         false);
       self.characteristic.set('trigger', false);
+      for(var i = 0; i < 4; i++){
+         self.moves[i].set('trigger', false)
+      }
 
-      // This is async for now (no API call inmplemented in pokeapi)
-      self.getCharacteristicForPokemon();
-      $.when(self.getPokemon(), self.getNatureForPokemon()).done(function(){
+      $.when( self.getPokemon(), 
+              self.getMove(1),
+              self.getMove(2),
+              self.getMove(3),
+              self.getMove(4),
+              self.getCharacteristicForPokemon(),
+              self.getNatureForPokemon()
+            ).done(function(){
          self.resolveAllStats();
 
          // Re-enable submodel triggers
          self.set('trigger',                true);
          self.nature.set('trigger',         true);
          self.characteristic.set('trigger', true);
+         for(var i = 0; i < 4; i++){
+            self.moves[i].set('trigger', true)
+         }
 
          self.trigger('newPkmnData');
       });
    },
 
    /*
+    * Return a promise that the move data for move[1234] will
+    * be returned.  Returns true if the backbone variables for
+    * move[1234] are not set
+    */
+   getMove: function(moveNum){
+      var promise = true;
+      if(this.get('move' + moveNum)){
+         this.moves[moveNum - 1].set('name', this.get('move' + moveNum));
+         promise = this.moves[moveNum - 1].fetch();
+      }
+      return promise;
+   },
+
+   /*
     * GET /api/v2/pokemon/(id|name)
-    * id has precedence over name if you call this funciton by itself.
+    * id has precedence over name if you call this function by itself.
     *
     * If you want to grab data by setting name or id, call the other methods below
     */
@@ -174,32 +185,38 @@ var PokemonModel = Backbone.Model.extend({
     * Wrapper to force refreshing by name
     */
    getPokemonByName: function(){
-      this.getPokemon(this.get('name').toLowerCase());
+      return this.getPokemon(this.get('name').toLowerCase());
    },
 
    /*
     * Wrapper to force refreshing by Id
     */
    getPokemonById: function(){
-      this.getPokemonById(this.get('id'));
+      return this.getPokemonById(this.get('id'));
    },
 
    /*
     * Get the nature data for the pokemon by calling Nature#fetch
-    *
-    * 'nature' needs to be set to something
     */
    getNatureForPokemon: function(){
-      this.nature.set('name', this.get('nature'))
-      return this.nature.fetch();
+      var promise = true;
+      if(this.get('nature')){
+         this.nature.set('name', this.get('nature'));
+         promise = this.nature.fetch();
+      }
+      return promise;
    },
 
    /*
     * Get the characteristic data for the pokemon by calling Characteristic#fetch
     */
    getCharacteristicForPokemon: function(){
-      this.characteristic.set('name', this.get('characteristic'))
-      return this.characteristic.fetch();
+      var promise = true;
+      if(this.get('characteristic')){
+         this.characteristic.set('name', this.get('characteristic'));
+         promise = this.characteristic.fetch();
+      }
+      return promise;
    },
 
    /*
@@ -252,7 +269,7 @@ var PokemonModel = Backbone.Model.extend({
 
 },{
    GetAllPokemonNames: function(next){
-      utils.pokeapiCall('api/v2/pokemon', {
+      utils.pokeapiCall('api/v2/pokemon/', {
          'limit': 9999
       },function(results){
          next(results.results.map(function(pkmn){

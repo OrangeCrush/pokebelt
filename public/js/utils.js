@@ -11,6 +11,18 @@ String.prototype.capitalize = function(){
    }
 }
 
+/*
+ * Convert 0.25 to 1/4 and 0.5 to 1/2
+ */
+String.prototype.toFraction = function(){
+   var rval = this;
+   switch(this){
+      case '0.5' : rval = '1/2'; break;
+      case '0.25': rval = '1/4'; break;
+   }
+   return rval.toString();
+}
+
 module.exports = {
    /*
     * Nicely decouple api calls anmd error handling with this

@@ -32,7 +32,7 @@ var DropDownView = Backbone.View.extend({
       this.label    = '';
       this.optional = false;
       this.bind     = this;
-      _.extend(this, opts)
+      _.extend(this, opts);
    },
 
    refresh: function(){

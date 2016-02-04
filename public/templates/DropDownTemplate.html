@@ -10,10 +10,10 @@
       <% } %>
    <% } %>
    <% for(var i = 0; i < list.length; i++){ %>
-      <% if(selected.toLowerCase() == list[i].toLowerCase()){ %>
-      <option selected="selected"><%= list[i] %></option>
-      <% }else{ %>
+      <%if(!selected || selected.toLowerCase() != list[i].toLowerCase()){%>
       <option><%= list[i] %></option>
+      <% } else { %>
+      <option selected="selected"><%= list[i] %></option>
       <% } %>
    <% } %>
 </select>
