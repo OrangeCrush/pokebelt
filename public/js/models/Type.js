@@ -46,7 +46,9 @@ var TypeModel = Backbone.Model.extend({
       },function(results){
          next(results.results.map(function(type){
             return type.name;
-         }).sort());
+         }).sort().filter(function(name){
+            return name.toLowerCase() != 'shadow' && name.toLowerCase() != 'unknown';
+         }));
       });
    }
 });

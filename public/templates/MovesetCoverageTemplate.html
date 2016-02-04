@@ -11,4 +11,22 @@
    <div id="move4dd" class="form-group">
    </div>
 </form>
-
+<table class='table table-condensed'>
+   <thead>
+      <tr>
+         <th>Primary Type</th>
+         <th>Secondary Type</th>
+      </tr>
+   </thead>
+   <tbody>
+      <% for(var type in types){ %>
+         <% for(var type2 in types){ %>
+            <% if(type == type2){%>
+               <tr><td><%= types[type] %></td><td>-</td></tr>
+            <% }else{%>
+               <tr><td><%= types[type] %></td><td><%= types[type2] %></td></tr>
+            <% } %>
+         <% } %>
+      <% } %>
+   </tbody>
+</table>

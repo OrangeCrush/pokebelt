@@ -22,6 +22,7 @@ var MovesetCoverageView = Backbone.View.extend({
          name           : opts.pkmnname
       });
 
+      // Pokemon name dropdown
       this.pkmnDropDown = new DropDownView({
          src : Pokemon.GetAllPokemonNames,
          id  : 'pokemon',
@@ -51,6 +52,13 @@ var MovesetCoverageView = Backbone.View.extend({
          this.moveDropDowns[i].refresh();
          this.moveDropDowns[i].on('newDropDownData', this.moveDropDowns[i].render, this.moveDropDowns[i]);
       }
+
+      // Get all of the type names
+      self.types = [];
+      Type.GetAllTypeNames(function(types){
+         self.types = types;
+         self.render();
+      })
 
       this.pkmn.on('newPkmnStatData', this.render, this);
       this.pkmn.on('newPkmnData',     this.render, this);
