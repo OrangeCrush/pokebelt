@@ -42,11 +42,12 @@ var MovesetCoverageView = Backbone.View.extend({
 
       // Pokemon name dropdown
       this.pkmnDropDown = new DropDownView({
-         src : Pokemon.GetAllPokemonNames,
-         id  : 'pokemon',
-         el  : '#pkmndd',
-         classes: 'form-control resubmit', 
-         label : 'Pokemon',
+         src     : Pokemon.GetAllPokemonNames,
+         id      : 'pokemon',
+         el      : '#pkmndd',
+         classes : 'form-control resubmit', 
+         label   : 'Pokemon',
+         sorted  : true,
          data : {
             attr: 'pokemon'
          }
@@ -58,11 +59,12 @@ var MovesetCoverageView = Backbone.View.extend({
       this.moveDropDowns = [];
       for(var i = 0; i < 4; i++){
          this.moveDropDowns.push(new DropDownView({
-            src: self.pkmn.getAvailableMoveNames(),
-            id: 'move' + (i + 1),
-            el: '#move' + (i + 1) + 'dd' ,
-            classes: 'form-control resubmit', 
-            label : 'Move' + (i + 1),
+            src     : self.pkmn.getAvailableMoveNames(),
+            id      : 'move' + (i + 1),
+            el      : '#move' + (i + 1) + 'dd' ,
+            classes : 'form-control resubmit', 
+            label   : 'Move' + (i + 1),
+            sorted  : true,
             data: {
                attr: 'move' + (i + 1)
             }

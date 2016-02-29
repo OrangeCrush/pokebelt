@@ -33,6 +33,7 @@ var IvCalcView = Backbone.View.extend({
          el      : '#pkmndd',
          classes : 'form-control resubmit',
          label   : 'Pokemon',
+         sorted  : true,
          data: {
             attr : 'name'
          }
@@ -47,6 +48,7 @@ var IvCalcView = Backbone.View.extend({
          classes  : 'form-control resubmit',
          label    : 'Nature',
          selected : 'Adamant',
+         sorted   : true,
          data: {
             attr: 'nature'
          }
@@ -62,6 +64,7 @@ var IvCalcView = Backbone.View.extend({
          classes  : 'form-control resubmit',
          label    : 'Characteristic',
          optional : true,
+         sorted   : true,
          data: {
             attr: 'characteristic'
          }

@@ -32,6 +32,7 @@ var DropDownView = Backbone.View.extend({
       this.label    = '';
       this.optional = false;
       this.bind     = this;
+      this.sorted   = false;
       _.extend(this, opts);
    },
 
@@ -55,6 +56,9 @@ var DropDownView = Backbone.View.extend({
     * Attach any data elements to the select
     */
    render: function(){
+      if(this.sorted){
+         this.list = this.list.sort();
+      }
       this.$el.html('');
       this.$el.append(this.DropDownTemplate(this));
       for(var key in this.data){
