@@ -5,6 +5,16 @@ var HomeView            = require('./views/HomeView');
 var $                   = require('jquery');
 
 var Router = Backbone.Router.extend({
+   initialize: function(){
+      this.currentView = null;
+   },
+
+   cleanView:function(){
+      if(this.currentView){
+         this.currentView.undelegateEvents();
+      }
+   },
+
    routes:{
       'movecov(/)(:pkmnid)(*moves)' : "moveset",
       'ivcalc(/)(:pkmnid)'          : "ivcalc",
@@ -13,12 +23,14 @@ var Router = Backbone.Router.extend({
    },
 
    home: function(){
-      return new HomeView({
+      this.cleanView();
+      this.currentView = new HomeView({
          el : $('#app') 
       });
    },
 
    ivcalc: function(pkmnid){
+      this.cleanView();
       var params = {
          el : $('#app')
       };
@@ -29,10 +41,11 @@ var Router = Backbone.Router.extend({
       }else{//assume a pokemon name was passed in if it can not be parsed into an int
          params.pkmnname = pkmnid;
       }
-      return new IvCalcView(params);
+      this.currentView = new IvCalcView(params);
    },
 
    moveset: function(pkmnid, moves){
+      this.cleanView();
       moves = moves || '';
       var params = {
          el:$('#app'),
@@ -45,7 +58,7 @@ var Router = Backbone.Router.extend({
       }else{//assume a pokemon name was passed in if it can not be parsed into an int
          params.pkmnname = pkmnid;
       }
-      return new MovesetCoverageView(params);
+      this.currentView = new MovesetCoverageView(params);
    }
 });
 
