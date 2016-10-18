@@ -33,10 +33,8 @@ module.exports = {
          url: 'http://' + host + ':8000/' + url,
          data: data
       }).done(function(results){
-         done(results)
-      }).error(function(err){
-         throw "Error in pokeapiCall - " + err;
-      });
+         done(results);
+      })
    },
 
    /*
