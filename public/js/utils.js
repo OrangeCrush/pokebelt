@@ -28,9 +28,8 @@ module.exports = {
     * Nicely decouple api calls anmd error handling with this
     */
    pokeapiCall: function(url, data, done){
-      host = window.location.hostname;
       return $.ajax({
-         url: 'http://' + host + ':8000/' + url,
+         url: 'https://pokeapi.co/'  + url,
          data: data
       }).done(function(results){
          done(results);
