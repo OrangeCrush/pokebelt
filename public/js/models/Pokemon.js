@@ -223,14 +223,20 @@ var PokemonModel = Backbone.Model.extend({
     * Return the base stat for this pokemon that was passed
     */
    getBaseStat: function(stat){
-      return this.get('stats')[{
-         'hp' : 0,
-         'atk': 1,
-         'def': 2,
-         'spa': 3,
-         'spd': 4,
-         'spe': 5
-      }[stat.toLowerCase()]].base_stat;
+      var statmap = {
+         'hp':'hp',
+         'atk':'attack',
+         'def':'defense',
+         'spa':'special-attack',
+         'spd':'special-defense',
+         'spe':'speed',
+      };
+
+      return this.get('stats').filter(function(x){
+         return x.stat.name == statmap[stat];
+      }).map(function(x){
+         return x.base_stat; 
+      })
    },
 
    /*
