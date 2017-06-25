@@ -25,15 +25,25 @@ String.prototype.toFraction = function(){
 
 module.exports = {
    /*
-    * Nicely decouple api calls anmd error handling with this
+    * Nicely decouple api calls and error handling with this
+    * Cache api calls for 1 day
     */
    pokeapiCall: function(url, data, done){
-      return $.ajax({
-         url: 'https://pokeapi.co/'  + url,
-         data: data
-      }).done(function(results){
-         done(results);
-      })
+      if(module.exports.localStorageSupport() && localStorage.getItem(url)){
+        console.log(`Cache hit for ${url}`);
+        return $.Deferred().resolve(done(JSON.parse(localStorage.getItem(url)))).promise();
+      }else{
+         return $.ajax({
+            url: 'https://pokeapi.co/'  + url,
+            data: data
+         }).done(function(results){
+            if(module.exports.localStorageSupport()){
+               console.log(`Caching url: ${url}`);
+               localStorage.setItem(url, JSON.stringify(results));
+            }
+            done(results);
+         });
+      }
    },
 
    /*
@@ -61,6 +71,16 @@ module.exports = {
       return name.split('-').map(function(nm){
          return nm.capitalize();
       }).join('-');
-   }
+   },
+
+   localStorageSupport: function(){
+      try{
+         localStorage.setItem('localStorage',true);
+         localStorage.removeItem('localStorage');
+         return true;
+      }catch(e){
+         return false;
+      }
+   },
 
 };

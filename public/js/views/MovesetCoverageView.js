@@ -16,6 +16,7 @@ var MovesetCoverageView = Backbone.View.extend({
    initialize: function(opts){
       var self = this;
       utils.updateActiveNav(1);
+      this.types = [];
 
       // The familiar this.pkmn PokemonModel
       //
@@ -74,7 +75,6 @@ var MovesetCoverageView = Backbone.View.extend({
       }
 
       // Get all of the type names and data
-      this.types             = [];
       this.typeModels        = [];
       this.typeModelPromises = [];
 
@@ -117,7 +117,7 @@ var MovesetCoverageView = Backbone.View.extend({
     * Render the move drop downs with this function
     */
    renderMoves: function(){
-      for(var i = 0; i < 4; i++){
+      for(var i = 0; this.moveDropDowns && i < 4; i++){
          this.moveDropDowns[i].src      = this.pkmn.getAvailableMoveNames();
          this.moveDropDowns[i].selected = this.pkmn.get('move' + (i + 1)) || '';
          this.moveDropDowns[i].refresh().setElement('#move' + (i + 1) + 'dd').render();
@@ -183,8 +183,10 @@ var MovesetCoverageView = Backbone.View.extend({
       this.buildCoverageTable();
       this.$el.append(this.MovesetCoverageTemplate(this));
       this.renderMoves();
-      this.pkmnDropDown.selected = this.pkmn.get('name');
-      this.pkmnDropDown.setElement('#pkmndd').render();
+      if(this.pkmnDropDown){
+         this.pkmnDropDown.selected = this.pkmn.get('name');
+         this.pkmnDropDown.setElement('#pkmndd').render();
+      }
    }
 });
 
