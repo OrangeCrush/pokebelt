@@ -30,7 +30,6 @@ module.exports = {
     */
    pokeapiCall: function(url, data, done){
       if(module.exports.localStorageSupport() && localStorage.getItem(url)){
-        console.log(`Cache hit for ${url}`);
         return $.Deferred().resolve(done(JSON.parse(localStorage.getItem(url)))).promise();
       }else{
          return $.ajax({
@@ -38,7 +37,6 @@ module.exports = {
             data: data
          }).done(function(results){
             if(module.exports.localStorageSupport()){
-               console.log(`Caching url: ${url}`);
                localStorage.setItem(url, JSON.stringify(results));
             }
             done(results);
