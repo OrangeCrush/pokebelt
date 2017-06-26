@@ -5,6 +5,7 @@ var utils = require('../utils');
 var Nature = require('./Nature');
 var Characteristic = require('./Characteristic');
 var Move = require('./Move');
+var Pokedex = require('../data/pokedex');
 
 /*
  * Encapsulate a single Pokemon.
@@ -275,13 +276,11 @@ var PokemonModel = Backbone.Model.extend({
 
 },{
    GetAllPokemonNames: function(next){
-      utils.pokeapiCall('api/v2/pokemon/', {
-         'limit': 9999
-      },function(results){
-         next(results.results.map(function(pkmn){
-            return utils.capitalizePkmn(pkmn.name);
-         }));
-      });
+      next(Object.keys(Pokedex.BattlePokedex).filter(function(x){
+         return Pokedex.BattlePokedex[x].num > 0;
+      }).map(function(x){
+         return Pokedex.BattlePokedex[x].species;
+      }));
    }
 });
 
