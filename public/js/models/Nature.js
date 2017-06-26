@@ -2,6 +2,7 @@ var Backbone = require('backbone');
 var $ = require('jquery');
 var utils = require('../utils');
 var _ = require('underscore');
+var Natures = require('../data/nature');
 
 /*
  * Encapsulate a Pokemon Nature
@@ -72,13 +73,9 @@ var NatureModel = Backbone.Model.extend({
    }
 },{
    GetAllNatures: function(next){
-      return utils.pokeapiCall('api/v2/nature/', {
-         'limit' : 9999
-      },function(results){
-         next(results.results.map(function(nature){
-            return nature.name.capitalize();
-         }).sort());
-      });
+      next(Natures.data.map(function(x){
+         return x.name.capitalize();
+      }));
    }
 });
 
