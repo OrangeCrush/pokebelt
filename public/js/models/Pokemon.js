@@ -171,15 +171,33 @@ var PokemonModel = Backbone.Model.extend({
     */
    getPokemon: function(key){
       var self = this;
-      var url = 'api/v2/pokemon/' + (key || self.get('id') || self.get('name').toLowerCase()) + '/';
-      return utils.pokeapiCall(url, {}, function(results){
-         for(key in results){
-            self.set(key, results[key], {silent: true});
+      var pkmn = Object.keys(Pokedex.BattlePokedex).map(function(x){
+         return Pokedex.BattlePokedex[x];
+      }).filter(function(x){
+         if(Number.isInteger(key)){
+            return x.num == key;
+         }else if(key){
+            return x.species.toLowerCase() == key.toLowerCase();
+         }else if(self.get('id')){
+            return x.num == self.get('id');
+         }else if(self.get('name')){
+            return x.species.toLowerCase() == self.get('name').toLowerCase();
+         }else{
+            throw "No name or id passed or set to get pokemon information";
          }
-         if(self.get('trigger')){
-            self.trigger('newPkmnStatData');
-         }
-      });
+      })[0];
+
+      for(i in pkmn){
+         this.set(i, pkmn[i], {silent: true});
+      }
+
+      // Map for compatability with older code
+      this.set('name', pkmn['species'], {silent: true});
+      this.set('id',   pkmn['num'],     {silent: true});
+
+      if(this.get('trigger')){
+         this.trigger('newPkmnStatData');
+      }
    },
 
    /*
@@ -193,7 +211,7 @@ var PokemonModel = Backbone.Model.extend({
     * Wrapper to force refreshing by Id
     */
    getPokemonById: function(){
-      return this.getPokemonById(this.get('id'));
+      return this.getPokemon(this.get('id'));
    },
 
    /*
@@ -224,20 +242,7 @@ var PokemonModel = Backbone.Model.extend({
     * Return the base stat for this pokemon that was passed
     */
    getBaseStat: function(stat){
-      var statmap = {
-         'hp':'hp',
-         'atk':'attack',
-         'def':'defense',
-         'spa':'special-attack',
-         'spd':'special-defense',
-         'spe':'speed',
-      };
-
-      return this.get('stats').filter(function(x){
-         return x.stat.name == statmap[stat];
-      }).map(function(x){
-         return x.base_stat; 
-      })
+      return this.get('baseStats')[stat];
    },
 
    /*
