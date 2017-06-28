@@ -2,6 +2,7 @@ var Backbone = require('backbone');
 var $ = require('jquery');
 var _ = require('underscore');
 var utils = require('../utils');
+var Moves = require('../data/moves');
 
 /*
  * Encapsulate a pokemon move
@@ -28,30 +29,25 @@ var MoveModel = Backbone.Model.extend({
 
    getMove: function(){
       var self = this;
-      if(self.get('name')){
-         var url = "api/v2/move/" + self.get('name').replace(' ', '-').toLowerCase() + '/';
-         return utils.pokeapiCall(url, {}, function(results){
-            for(key in results){
-               self.set(key, results[key], {silent : true});
-            }
-            if(self.get('trigger')){
-               self.trigger('newMoveData');
-            }
-         });
+      if(this.get('name')){
+         var move = Object.keys(Moves.data).filter(function(x){
+            return x.name == self.get('name');
+         })[0];
+         for(i in move){
+            this.set(i, move[i], {silent: true});
+         }
+         if(this.get('trigger')){
+            this.trigger('newMoveData');
+         }
       }
+      return $.Deferred().resolve().promise();
    },
 
 },{
    GetAllMoveNames: function(next){
-      utils.pokeapiCall('api/v2/move/',{
-         'limit': 9999
-      },function(results){
-         next(results.results.map(function(type){
-            return type.name;
-         }).sort().filter(function(name){
-            return name.toLowerCase() != 'shadow' && name.toLowerCase() != 'unknown';
-         }));
-      });
+      next(Object.keys(Moves.data).map(function(x){
+         return Moves.data[x].name;
+      }).sort());
    }
 });
 

@@ -1,6 +1,6 @@
 'use strict';
 
-exports.BattlePokedex = {
+exports.data = {
 	bulbasaur: {
 		num: 1,
 		species: "Bulbasaur",

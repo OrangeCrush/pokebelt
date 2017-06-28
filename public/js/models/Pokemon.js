@@ -171,8 +171,8 @@ var PokemonModel = Backbone.Model.extend({
     */
    getPokemon: function(key){
       var self = this;
-      var pkmn = Object.keys(Pokedex.BattlePokedex).map(function(x){
-         return Pokedex.BattlePokedex[x];
+      var pkmn = Object.keys(Pokedex.data).map(function(x){
+         return Pokedex.data[x];
       }).filter(function(x){
          if(Number.isInteger(key)){
             return x.num == key;
@@ -185,7 +185,7 @@ var PokemonModel = Backbone.Model.extend({
          }else{
             throw "No name or id passed or set to get pokemon information";
          }
-      })[0];
+      })[0]; //TODO handle mega's and other forms
 
       for(i in pkmn){
          this.set(i, pkmn[i], {silent: true});
@@ -198,6 +198,8 @@ var PokemonModel = Backbone.Model.extend({
       if(this.get('trigger')){
          this.trigger('newPkmnStatData');
       }
+
+      return $.Deferred().resolve().promise();
    },
 
    /*
@@ -281,10 +283,10 @@ var PokemonModel = Backbone.Model.extend({
 
 },{
    GetAllPokemonNames: function(next){
-      next(Object.keys(Pokedex.BattlePokedex).filter(function(x){
-         return Pokedex.BattlePokedex[x].num > 0;
+      next(Object.keys(Pokedex.data).filter(function(x){
+         return Pokedex.data[x].num > 0;
       }).map(function(x){
-         return Pokedex.BattlePokedex[x].species;
+         return Pokedex.data[x].species;
       }));
    }
 });
