@@ -6,6 +6,8 @@ var Nature = require('./Nature');
 var Characteristic = require('./Characteristic');
 var Move = require('./Move');
 var Pokedex = require('../data/pokedex');
+var Learnset = require('../data/learnset');
+var Moves = require('../data/moves');
 
 /*
  * Encapsulate a single Pokemon.
@@ -171,6 +173,7 @@ var PokemonModel = Backbone.Model.extend({
     */
    getPokemon: function(key){
       var self = this;
+      var pkmn_key;
       var pkmn = Object.keys(Pokedex.data).map(function(x){
          return Pokedex.data[x];
       }).filter(function(x){
@@ -187,6 +190,7 @@ var PokemonModel = Backbone.Model.extend({
          }
       })[0]; //TODO handle mega's and other forms
 
+      // Copy all attributes from the dex onto this object
       for(i in pkmn){
          this.set(i, pkmn[i], {silent: true});
       }
@@ -271,14 +275,19 @@ var PokemonModel = Backbone.Model.extend({
       }
    },
 
+   /*
+    * Return array of move names this pokemon can learn
+    */
    getAvailableMoveNames: function(){
-      if(this.get('moves')){
-         return _.uniq(this.get('moves').map(function(mv){
-            return utils.capitalizePkmn(mv.move.name).replace('-',' ');
-         }).sort());
-      }else{
-         return [];
-      }
+      var self = this;
+      var pkmn_key = Object.keys(Pokedex.data).filter(function(x){
+         return Pokedex.data[x].species == self.get('name');
+      })[0]; //TODO deal with forms
+
+      var move_keys = Object.keys(Learnset.data[pkmn_key].learnset);
+      return move_keys.map(function(x){
+         return Moves.data[x].name;
+      });
    }
 
 },{
