@@ -26,11 +26,11 @@
          <td></td>
       <% var y = 0; %>
       <% for(var type in types){ %>
-            <td><img src="img/<%= types[type] %>.gif"></img></td>
+            <td><img src="img/<%= types[type].toLowerCase() %>.gif"></img></td>
       <% } %>
       <% for(var type in types){ %>
          <tr>
-            <td><img src="img/<%= types[type] %>.gif"><img></td>
+            <td><img src="img/<%= types[type].toLowerCase() %>.gif"><img></td>
             <% var x = 0; %>
             <% for(var type in types){ %>
                <% if(y >= x) { %>

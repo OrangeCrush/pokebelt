@@ -2,6 +2,8 @@ var Backbone = require('backbone');
 var $ = require('jquery');
 var _ = require('underscore');
 var utils = require('../utils');
+var TypeMods = require('../data/type_mods');
+var Types = require('../data/types');
 
 /*
  * Encapsulate a pokemon type
@@ -20,65 +22,34 @@ var TypeModel = Backbone.Model.extend({
    },
 
    sync: function(method,model){
-      switch(method){
-         case 'read': return this.getType();
-      }
-   },
-
-   getType: function(){
-      var self = this;
-      var url = "api/v2/type/" + self.get('name').toLowerCase() + '/';
-      return utils.pokeapiCall(url, {}, function(results){
-         for(key in results){
-            self.set(key, results[key]);
-         }
-         self.trigger('newTypeData');
-      });
+      return;
    },
 
    /*
     * Get the damage mod when this type attacks the passed type
     */
    getAtkMod: function(type){
-      var mod = 1;
-      var mods = this.get('damage_relations')
-      if(!mods || mods.no_damage_to.map(function(x){ return x.name }).indexOf(type) != -1){
-         mod = 0;
-      }else if(mods.half_damage_to.map(function(x){ return x.name }).indexOf(type) != -1){
-         mod = 0.5;
-      }else if(mods.double_damage_to.map(function(x){ return x.name }).indexOf(type) != -1){
-         mod = 2;
-      }
-      return mod;
+      var self = this;
+      return TypeMods.data.filter(function(x){
+         return x.attacking == self.get('name').toLowerCase() && type.toLowerCase() == x.defending;
+      })[0].factor;
    },
 
    /*
     * Get the damage mod when this type defends agaisnt the passed type
     */
    getDefMod: function(type){
-      var mod = 1;
-      var mods = this.get('damage_relations')
-      if(!mods || mods.no_damage_from.map(function(x){ return x.name }).indexOf(type) != -1){
-         mod = 0;
-      }else if(mods.half_damage_from.map(function(x){ return x.name }).indexOf(type) != -1){
-         mod = 0.5;
-      }else if(mods.double_damage_from.map(function(x){ return x.name }).indexOf(type) != -1){
-         mod = 2;
-      }
-      return mod;
+      var self = this;
+      return TypeMods.data.filter(function(x){
+         return x.defending == self.get('name').toLowerCase() && type.toLowerCase() == x.attacking;
+      })[0].factor;
    }
 
 },{
    GetAllTypeNames: function(next){
-      utils.pokeapiCall('api/v2/type/',{
-         'limit': 9999
-      },function(results){
-         next(results.results.map(function(type){
-            return type.name;
-         }).sort().filter(function(name){
-            return name.toLowerCase() != 'shadow' && name.toLowerCase() != 'unknown';
-         }));
-      });
+      next(Types.data.map(function(x){
+         return x.capitalize();
+      }).sort());
    }
 });
 

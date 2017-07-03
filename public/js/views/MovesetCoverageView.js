@@ -139,9 +139,9 @@ var MovesetCoverageView = Backbone.View.extend({
             var best     = undefined;
             var bestMove = undefined;
             for(var mv in this.pkmn.moves){
-               if(this.pkmn.moves[mv].get('type') && this.pkmn.moves[mv].get('power')){
-                  var mod1 = this.typeModels[y].getDefMod(self.pkmn.moves[mv].get('type').name);
-                  var mod2 = this.typeModels[x].getDefMod(self.pkmn.moves[mv].get('type').name);
+               if(this.pkmn.moves[mv].get('type') && this.pkmn.moves[mv].get('basePower') > 0){
+                  var mod1 = this.typeModels[y].getDefMod(self.pkmn.moves[mv].get('type'));
+                  var mod2 = this.typeModels[x].getDefMod(self.pkmn.moves[mv].get('type'));
                   var finalmod = mod1 * mod2;
                   if(this.typeModels[x].get('name') == this.typeModels[y].get('name')){
                      finalmod = mod1;

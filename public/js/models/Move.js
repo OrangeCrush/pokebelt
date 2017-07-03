@@ -30,10 +30,12 @@ var MoveModel = Backbone.Model.extend({
    getMove: function(){
       var self = this;
       if(this.get('name')){
-         var move = Object.keys(Moves.data).filter(function(x){
-            return x.name == self.get('name');
+         var move_key = Object.keys(Moves.data).filter(function(x){
+            return Moves.data[x].name == self.get('name');
          })[0];
-         for(i in move){
+
+         var move;
+         for(i in move = Moves.data[move_key]){
             this.set(i, move[i], {silent: true});
          }
          if(this.get('trigger')){
