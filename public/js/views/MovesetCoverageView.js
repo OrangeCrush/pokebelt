@@ -132,7 +132,7 @@ var MovesetCoverageView = Backbone.View.extend({
          var row = [];
          var rowMoves = [];
          for(var x in this.typeModels){
-            var best     = undefined;
+            var best     = 0;
             var bestMove = undefined;
             for(var mv in this.pkmn.moves){
                if(this.pkmn.moves[mv].get('type') && (this.pkmn.moves[mv].get('basePower') > 0 || this.pkmn.moves[mv].get('basePowerCallback'))){
