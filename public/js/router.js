@@ -3,6 +3,7 @@ var IvCalcView          = require('./views/IvCalcView');
 var MovesetCoverageView = require('./views/MovesetCoverageView.js');
 var HomeView            = require('./views/HomeView');
 var $                   = require('jquery');
+var PokemonModel        = require('./models/Pokemon');
 
 var Router = Backbone.Router.extend({
    initialize: function(){
@@ -32,15 +33,9 @@ var Router = Backbone.Router.extend({
    ivcalc: function(pkmnid){
       this.cleanView();
       var params = {
-         el : $('#app')
+         el : $('#app'),
+         pkmnname: PokemonModel.GetRandomPokemon()
       };
-      if(!pkmnid){// Assign a random pokemon if nothing was passed
-         params.pkmnid = Math.ceil((Math.random() * 718));
-      }else if(parseInt(pkmnid)){//assign the id if it was passed
-         params.pkmnid  = pkmnid;
-      }else{//assume a pokemon name was passed in if it can not be parsed into an int
-         params.pkmnname = pkmnid;
-      }
       this.currentView = new IvCalcView(params);
    },
 
@@ -49,15 +44,9 @@ var Router = Backbone.Router.extend({
       moves = moves || '';
       var params = {
          el:$('#app'),
-         moves: moves.split('/')
+         moves: moves.split('/'),
+         pkmnname: PokemonModel.GetRandomPokemon()
       };
-      if(!pkmnid){// Assign a random pokemon if nothing was passed
-         params.pkmnid = Math.ceil((Math.random() * 718));
-      }else if(parseInt(pkmnid)){//assign the id if it was passed
-         params.pkmnid  = pkmnid;
-      }else{//assume a pokemon name was passed in if it can not be parsed into an int
-         params.pkmnname = pkmnid;
-      }
       this.currentView = new MovesetCoverageView(params);
    }
 });

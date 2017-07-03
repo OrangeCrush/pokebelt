@@ -74,7 +74,6 @@ var IvCalcView = Backbone.View.extend({
 
 
       this.pkmn = new Pokemon({
-         id             : opts.pkmnid, 
          name           : opts.pkmnname,
          level          : 50,
          nature         : 'adamant',

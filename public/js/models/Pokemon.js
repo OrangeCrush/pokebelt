@@ -52,7 +52,7 @@ var Moves = require('../data/moves');
  *    this.characteristic        // Points to Characteristic model instance, updated on change:characteristic
  */
 var PokemonModel = Backbone.Model.extend({
-   idAttribute: 'id',
+   idAttribute: 'name',
 
    stats: ['hp','atk','def','spa','spd','spe'],
 
@@ -65,13 +65,7 @@ var PokemonModel = Backbone.Model.extend({
       _.extend(this, opts)
       this.set('trigger', true);
 
-      if(opts.name){
-         this.set('name', opts.name.toLowerCase());
-      }
-      if(opts.id){
-         this.set('id', opts.id);
-      }
-      if(!(this.get('name') || this.get('id'))){
+      if(!this.get('name')){
          throw "Must specify name or id when creating a Pokemon";
       }
 
@@ -92,8 +86,7 @@ var PokemonModel = Backbone.Model.extend({
 
       this.on('change:nature',         this.getNatureForPokemon, this);
       this.on('change:characteristic', this.getCharacteristicForPokemon, this);
-      this.on('change:name',           this.getPokemonByName, this);
-      this.on('change:id',             this.getPokemonById, this);
+      this.on('change:name',           this.getPokemon, this);
       this.on('change:move1',          function(){ return this.getMove(1) }, this);
       this.on('change:move2',          function(){ return this.getMove(2) }, this);
       this.on('change:move3',          function(){ return this.getMove(3) }, this);
@@ -171,53 +164,28 @@ var PokemonModel = Backbone.Model.extend({
     *
     * If you want to grab data by setting name or id, call the other methods below
     */
-   getPokemon: function(key){
+   getPokemon: function(){
       var self = this;
       var pkmn_key;
       var pkmn = Object.keys(Pokedex.data).map(function(x){
          return Pokedex.data[x];
       }).filter(function(x){
-         if(Number.isInteger(key)){
-            return x.num == key;
-         }else if(key){
-            return x.species.toLowerCase() == key.toLowerCase();
-         }else if(self.get('id')){
-            return x.num == self.get('id');
-         }else if(self.get('name')){
+         if(self.get('name')){
             return x.species.toLowerCase() == self.get('name').toLowerCase();
          }else{
             throw "No name or id passed or set to get pokemon information";
          }
-      })[0]; //TODO handle mega's and other forms
+      })[0];
 
       // Copy all attributes from the dex onto this object
       for(i in pkmn){
          this.set(i, pkmn[i], {silent: true});
       }
 
-      // Map for compatability with older code
-      this.set('name', pkmn['species'], {silent: true});
-      this.set('id',   pkmn['num'],     {silent: true});
-
       if(this.get('trigger')){
          this.trigger('newPkmnStatData');
       }
 
-      return $.Deferred().resolve().promise();
-   },
-
-   /*
-    * Wrapper to force refreshing by name
-    */
-   getPokemonByName: function(){
-      return this.getPokemon(this.get('name').toLowerCase());
-   },
-
-   /*
-    * Wrapper to force refreshing by Id
-    */
-   getPokemonById: function(){
-      return this.getPokemon(this.get('id'));
    },
 
    /*
@@ -292,11 +260,19 @@ var PokemonModel = Backbone.Model.extend({
 
 },{
    GetAllPokemonNames: function(next){
-      next(Object.keys(Pokedex.data).filter(function(x){
+      var names = Object.keys(Pokedex.data).filter(function(x){
          return Pokedex.data[x].num > 0;
       }).map(function(x){
          return Pokedex.data[x].species;
-      }));
+      });
+      if(next) {
+         next(names);
+      }
+      return names;
+   },
+   GetRandomPokemon: function(){
+      var mons = PokemonModel.GetAllPokemonNames();
+      return mons[Math.floor(Math.random() * mons.length)];
    }
 });
 

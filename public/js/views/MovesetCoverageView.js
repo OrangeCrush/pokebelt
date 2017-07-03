@@ -24,8 +24,7 @@ var MovesetCoverageView = Backbone.View.extend({
       // Store move objects as .move[1234]
       //
       this.pkmn = new Pokemon({
-         id             : opts.pkmnid, 
-         name           : opts.pkmnname
+         name : opts.pkmnname
       });
 
       for(var i = 0; i < 4; i++){
