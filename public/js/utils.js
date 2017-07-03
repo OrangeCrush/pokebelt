@@ -1,6 +1,8 @@
 /*
  * Extend any protoypes (IE) string or write uselful functions here
  */
+var Backbone = require('backbone');
+var _ = require('underscore');
 var $ = require('jquery');
 
 String.prototype.capitalize = function(){
@@ -63,3 +65,16 @@ module.exports = {
    },
 
 };
+
+/*
+ * Boilerplate backbone extensions
+ */
+
+/*
+ * Reset the model.
+ *
+ * Default to this.defaults, plus anything passed in as an argument
+ */
+Backbone.Model.prototype.reset = function(init){
+   this.clear({silent:true}).set(_.extend(this.defaults || {}, init),{silent:true});
+}

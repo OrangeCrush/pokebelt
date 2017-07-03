@@ -21,6 +21,10 @@ var TypeModel = Backbone.Model.extend({
       _.extend(this,opts);
    },
 
+   defaults: {
+      'trigger_event': true
+   },
+
    sync: function(method,model){
       return;
    },

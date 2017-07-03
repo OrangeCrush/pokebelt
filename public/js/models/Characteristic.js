@@ -20,6 +20,10 @@ var CharacteristicModel = Backbone.Model.extend({
       this.set('name', opts.name.toLowerCase());
    },
 
+   defaults: {
+      'trigger_event': true
+   },
+
    sync: function(method){
       switch(method){
          case 'read':

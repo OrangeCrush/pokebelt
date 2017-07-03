@@ -26,6 +26,10 @@ var NatureModel = Backbone.Model.extend({
       }
    },
 
+   defaults: {
+      'trigger_event': true
+   },
+
    sync: function(method, model){
       switch(method){
          case 'read': return this.getNature();
@@ -45,7 +49,7 @@ var NatureModel = Backbone.Model.extend({
 
          this.normalizeMod();
 
-         if(this.get('trigger')){
+         if(this.get('trigger_event')){
             this.trigger('newNatureData'); 
          }
       }

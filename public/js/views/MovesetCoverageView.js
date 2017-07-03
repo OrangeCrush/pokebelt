@@ -33,12 +33,9 @@ var MovesetCoverageView = Backbone.View.extend({
       this.pkmn.on('newPkmnStatData', this.setDefaultMoves, this);
       this.pkmn.on('newPkmnStatData', this.render, this);
       this.pkmn.on('newPkmnData',     this.render, this);
-      // Only fetch the Pokemon data (which includes the moveset)
-      // We can't fetch the moves yet because we only
-      // want to fetch the default list of moves (see the issue?)
-      this.pkmn.getPokemon().done(function(){
-         self.setDefaultMoves();
-      });
+
+      this.pkmn.getPokemon();
+      this.setDefaultMoves();
 
       // Pokemon name dropdown
       this.pkmnDropDown = new DropDownView({
@@ -138,7 +135,7 @@ var MovesetCoverageView = Backbone.View.extend({
             var best     = undefined;
             var bestMove = undefined;
             for(var mv in this.pkmn.moves){
-               if(this.pkmn.moves[mv].get('type') && this.pkmn.moves[mv].get('basePower') > 0){
+               if(this.pkmn.moves[mv].get('type') && (this.pkmn.moves[mv].get('basePower') > 0 || this.pkmn.moves[mv].get('basePowerCallback'))){
                   var mod1 = this.typeModels[y].getDefMod(self.pkmn.moves[mv].get('type'));
                   var mod2 = this.typeModels[x].getDefMod(self.pkmn.moves[mv].get('type'));
                   var finalmod = mod1 * mod2;

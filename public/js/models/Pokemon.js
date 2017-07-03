@@ -63,7 +63,6 @@ var PokemonModel = Backbone.Model.extend({
       var self = this;
 
       _.extend(this, opts)
-      this.set('trigger', true);
 
       if(!this.get('name')){
          throw "Must specify name or id when creating a Pokemon";
@@ -92,6 +91,10 @@ var PokemonModel = Backbone.Model.extend({
       this.on('change:move3',          function(){ return this.getMove(3) }, this);
       this.on('change:move4',          function(){ return this.getMove(4) }, this);
 
+   },
+
+   defaults: {
+      'trigger_event': true
    },
 
    /*
@@ -182,7 +185,7 @@ var PokemonModel = Backbone.Model.extend({
          this.set(i, pkmn[i], {silent: true});
       }
 
-      if(this.get('trigger')){
+      if(this.get('trigger_event')){
          this.trigger('newPkmnStatData');
       }
 

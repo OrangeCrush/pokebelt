@@ -18,7 +18,10 @@ var MoveModel = Backbone.Model.extend({
 
    initialize: function(opts){
       _.extend(this,opts);
-      this.set('trigger', true);
+   },
+
+   defaults: {
+      'trigger_event': true,
    },
 
    sync: function(method,model){
@@ -30,6 +33,7 @@ var MoveModel = Backbone.Model.extend({
    getMove: function(){
       var self = this;
       if(this.get('name')){
+         this.reset({'name': this.get('name')});
          var move_key = Object.keys(Moves.data).filter(function(x){
             return Moves.data[x].name == self.get('name');
          })[0];
@@ -38,7 +42,7 @@ var MoveModel = Backbone.Model.extend({
          for(i in move = Moves.data[move_key]){
             this.set(i, move[i], {silent: true});
          }
-         if(this.get('trigger')){
+         if(this.get('trigger_event')){
             this.trigger('newMoveData');
          }
       }
