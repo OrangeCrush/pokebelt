@@ -34,7 +34,7 @@ var Router = Backbone.Router.extend({
       this.cleanView();
       var params = {
          el : $('#app'),
-         pkmnname: PokemonModel.GetRandomPokemon()
+         pkmnname: pkmnid || PokemonModel.GetRandomPokemon()
       };
       this.currentView = new IvCalcView(params);
    },
@@ -45,7 +45,7 @@ var Router = Backbone.Router.extend({
       var params = {
          el:$('#app'),
          moves: moves.split('/'),
-         pkmnname: PokemonModel.GetRandomPokemon()
+         pkmnname: pkmnid || PokemonModel.GetRandomPokemon()
       };
       this.currentView = new MovesetCoverageView(params);
    }
