@@ -2,10 +2,6 @@
    Author's custom styles
    ========================================================================== */
 body {
-   background-image: url("../img/Pokeball-transparent.png");
-   background-repeat: no-repeat;
-   background-attachment: fixed;
-   background-position: center; 
    padding: 0px;
 }
 
