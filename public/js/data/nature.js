@@ -3,127 +3,127 @@
 exports.data = [
    {
       "name": "hardy",
-      "increase": "attack",
-      "decrease": "attack"
+      "increased_stat": "attack",
+      "decreased_stat": "attack"
    },
    {
       "name": "bold",
-      "increase": "defense",
-      "decrease": "attack"
+      "increased_stat": "defense",
+      "decreased_stat": "attack"
    },
    {
       "name": "modest",
-      "increase": "special-attack",
-      "decrease": "attack"
+      "increased_stat": "special-attack",
+      "decreased_stat": "attack"
    },
    {
       "name": "calm",
-      "increase": "special-defense",
-      "decrease": "attack"
+      "increased_stat": "special-defense",
+      "decreased_stat": "attack"
    },
    {
       "name": "timid",
-      "increase": "speed",
-      "decrease": "attack"
+      "increased_stat": "speed",
+      "decreased_stat": "attack"
    },
    {
       "name": "lonely",
-      "increase": "attack",
-      "decrease": "defense"
+      "increased_stat": "attack",
+      "decreased_stat": "defense"
    },
    {
       "name": "docile",
-      "increase": "defense",
-      "decrease": "defense"
+      "increased_stat": "defense",
+      "decreased_stat": "defense"
    },
    {
       "name": "mild",
-      "increase": "special-attack",
-      "decrease": "defense"
+      "increased_stat": "special-attack",
+      "decreased_stat": "defense"
    },
    {
       "name": "gentle",
-      "increase": "special-defense",
-      "decrease": "defense"
+      "increased_stat": "special-defense",
+      "decreased_stat": "defense"
    },
    {
       "name": "hasty",
-      "increase": "speed",
-      "decrease": "defense"
+      "increased_stat": "speed",
+      "decreased_stat": "defense"
    },
    {
       "name": "adamant",
-      "increase": "attack",
-      "decrease": "special-attack"
+      "increased_stat": "attack",
+      "decreased_stat": "special-attack"
    },
    {
       "name": "impish",
-      "increase": "defense",
-      "decrease": "special-attack"
+      "increased_stat": "defense",
+      "decreased_stat": "special-attack"
    },
    {
       "name": "bashful",
-      "increase": "special-attack",
-      "decrease": "special-attack"
+      "increased_stat": "special-attack",
+      "decreased_stat": "special-attack"
    },
    {
       "name": "careful",
-      "increase": "special-defense",
-      "decrease": "special-attack"
+      "increased_stat": "special-defense",
+      "decreased_stat": "special-attack"
    },
    {
       "name": "rash",
-      "increase": "special-attack",
-      "decrease": "special-defense"
+      "increased_stat": "special-attack",
+      "decreased_stat": "special-defense"
    },
    {
       "name": "jolly",
-      "increase": "speed",
-      "decrease": "special-attack"
+      "increased_stat": "speed",
+      "decreased_stat": "special-attack"
    },
    {
       "name": "naughty",
-      "increase": "attack",
-      "decrease": "special-defense"
+      "increased_stat": "attack",
+      "decreased_stat": "special-defense"
    },
    {
       "name": "lax",
-      "increase": "defense",
-      "decrease": "special-defense"
+      "increased_stat": "defense",
+      "decreased_stat": "special-defense"
    },
    {
       "name": "quirky",
-      "increase": "special-defense",
-      "decrease": "special-defense"
+      "increased_stat": "special-defense",
+      "decreased_stat": "special-defense"
    },
    {
       "name": "naive",
-      "increase": "speed",
-      "decrease": "special-defense"
+      "increased_stat": "speed",
+      "decreased_stat": "special-defense"
    },
    {
       "name": "brave",
-      "increase": "attack",
-      "decrease": "speed"
+      "increased_stat": "attack",
+      "decreased_stat": "speed"
    },
    {
       "name": "relaxed",
-      "increase": "defense",
-      "decrease": "speed"
+      "increased_stat": "defense",
+      "decreased_stat": "speed"
    },
    {
       "name": "quiet",
-      "increase": "special-attack",
-      "decrease": "speed"
+      "increased_stat": "special-attack",
+      "decreased_stat": "speed"
    },
    {
       "name": "sassy",
-      "increase": "special-defense",
-      "decrease": "speed"
+      "increased_stat": "special-defense",
+      "decreased_stat": "speed"
    },
    {
       "name": "serious",
-      "increase": "speed",
-      "decrease": "speed"
+      "increased_stat": "speed",
+      "decreased_stat": "speed"
    }
 ];

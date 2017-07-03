@@ -33,18 +33,21 @@ var NatureModel = Backbone.Model.extend({
    },
 
    getNature: function(){
+      var self = this;
       if(this.get('name')){
-         var self = this;
-         var url = 'api/v2/nature/' + self.get('name').toLowerCase() + '/';
-         return utils.pokeapiCall(url, {}, function(results){
-            for(key in results){
-               self.set(key, results[key], {silent: true});
-            }
-            self.normalizeMod();
-            if(self.get('trigger')){
-               self.trigger('newNatureData');
-            }
-         });
+         var nature = Natures.data.filter(function(x){
+            return x.name == self.get('name').toLowerCase();
+         })[0];
+
+         for(i in nature){
+            this.set(i, nature[i], {silent:true});
+         }
+
+         this.normalizeMod();
+
+         if(this.get('trigger')){
+            this.trigger('newNatureData'); 
+         }
       }
    },
 
@@ -58,12 +61,12 @@ var NatureModel = Backbone.Model.extend({
          spe: 'speed'
       };
       for(var stat in stats){
-         if(this.get('decreased_stat') && this.get('decreased_stat').name == stats[stat]){
-            this.set(stat, 0.9);
-         }else if(this.get('increased_stat') && this.get('increased_stat').name == stats[stat]){
-            this.set(stat, 1.1);
+         if(this.get('decreased_stat') == stats[stat]){
+            this.set(stat, 0.9, {silent: true});
+         }else if(this.get('increased_stat') == stats[stat]){
+            this.set(stat, 1.1, {silent: true});
          }else{
-            this.set(stat, 1);
+            this.set(stat, 1,{silent: true});
          }
       }
    },
