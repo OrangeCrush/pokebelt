@@ -24,25 +24,6 @@ String.prototype.toFraction = function(){
 }
 
 module.exports = {
-   /*
-    * Nicely decouple api calls and error handling with this
-    * Cache api calls for 1 day
-    */
-   pokeapiCall: function(url, data, done){
-      if(module.exports.localStorageSupport() && localStorage.getItem(url)){
-        return $.Deferred().resolve(done(JSON.parse(localStorage.getItem(url)))).promise();
-      }else{
-         return $.ajax({
-            url: 'https://pokeapi.co/'  + url,
-            data: data
-         }).done(function(results){
-            if(module.exports.localStorageSupport()){
-               localStorage.setItem(url, JSON.stringify(results));
-            }
-            done(results);
-         });
-      }
-   },
 
    /*
     * Highlight the tabs on the top of the page
