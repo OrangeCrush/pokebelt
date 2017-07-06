@@ -1,7 +1,7 @@
 <div class="container">
    <div class="row">
       <div class="span4"></div>
-      <div class="span4"><img style="padding: 10px;" class="center-block" src="img/<%= pkmn.get('num') %>.gif" /></div>
+      <div class="span4"><img style="padding: 10px;" class="center-block" src="img/<%= pkmn.escape('num') %>.gif" /></div>
       <div class="span4"></div>
    </div>
 </div>
@@ -14,7 +14,7 @@
         <label for="level">Level</label>
         <select data-attr="level" class="form-control resubmit" id="level">
            <% for(var i = 0; i < 100; i++){ %>
-              <% if((i + 1) == pkmn.get('level')){ %>
+              <% if((i + 1) == pkmn.escape('level')){ %>
                  <option selected="selected"><%= i + 1 %></option>
               <% }else{ %>
                  <option><%= i + 1 %></option>
@@ -41,7 +41,7 @@
       <tr>
          <td></td>
       <% for(var i in pkmn.stats) { %>
-      <td><input data-attr="<%= 'ev_' + pkmn.stats[i].toLowerCase() %>" type="text" class="form-control resubmit" id="ev-<%=pkmn.stats[i].toLowerCase() %>" value="<%= pkmn.get('ev_' + pkmn.stats[i].toLowerCase()) || 0 %>"></td>
+      <td><input data-attr="<%= 'ev_' + pkmn.stats[i].toLowerCase() %>" type="text" class="form-control resubmit" id="ev-<%=pkmn.stats[i].toLowerCase() %>" value="<%= pkmn.escape('ev_' + pkmn.stats[i].toLowerCase()) || 0 %>"></td>
          <% } %>
       </tr>
    </tbody>
