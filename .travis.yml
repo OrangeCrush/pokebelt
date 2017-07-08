@@ -1,0 +1,11 @@
+---
+language: node_js
+node_js:
+- node
+before_install:
+- pushd ./public/js && npm install && popd
+- pushd ./server    && npm install && popd
+script:
+- pushd ./public/js && ./node_modules/.bin/eslint . && popd
+- pushd ./server    && ./node_modules/.bin/eslint . && popd
+
