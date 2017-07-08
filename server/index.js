@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 
-var express = require('express');
-var app = express();
+'use strict';
 
-app.use(express.static(__dirname + '/../public', { maxage: 0 })); 
+let express = require('express');
+let app = express();
 
-var port = 3000;
+app.use(express.static(__dirname + '/../public', {maxage: 0}));
+
+let port = 3000;
 app.listen(process.env.PORT || port);
-console.log("App listening on port: " + port);
+console.log('App listening on port: ' + port);
 
