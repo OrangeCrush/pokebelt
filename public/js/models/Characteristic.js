@@ -1,6 +1,4 @@
 var Backbone = require('backbone');
-var $ = require('jquery');
-var utils = require('../utils');
 var Characteristics = require('../data/characteristic');
 
 /*
@@ -12,48 +10,48 @@ var Characteristics = require('../data/characteristic');
  *
  */
 var CharacteristicModel = Backbone.Model.extend({
-   idAttribute : 'name',
-   initialize: function(opts){
-      if(!opts){
-         throw "Constructor args can not be null.";
-      }
-      this.set('name', opts.name.toLowerCase());
-   },
+  idAttribute: 'name',
+  initialize: function(opts) {
+    if (!opts) {
+      throw new Error('Constructor args can not be null.');
+    }
+    this.set('name', opts.name.toLowerCase());
+  },
 
-   defaults: {
-      'trigger_event': true
-   },
+  defaults: {
+    'trigger_event': true
+  },
 
-   sync: function(method){
-      switch(method){
-         case 'read':
-            this.getCharacteristicData();
-      }
-   },
+  sync: function(method) {
+    switch (method) {
+      case 'read':
+        this.getCharacteristicData();
+    }
+  },
 
-   getCharacteristicData: function(){
-      var self = this;
-      var chars = Characteristics.data.filter(function(characteristic){
-         return self.get('name').toLowerCase() == characteristic.name.toLowerCase();
-      });
+  getCharacteristicData: function() {
+    var self = this;
+    var chars = Characteristics.data.filter(function(characteristic) {
+      return self.get('name').toLowerCase() === characteristic.name.toLowerCase();
+    });
 
-      if(chars.length == 1){
-         self.set('name', chars[0].name);
-         self.set('stat', chars[0].stat);
-         self.set('ivs',  chars[0].ivs);
-      }
-      if(self.get('trigger')){
-         self.trigger('newCharacteristicData');
-      }
-   }
+    if (chars.length === 1) {
+      self.set('name', chars[0].name);
+      self.set('stat', chars[0].stat);
+      self.set('ivs', chars[0].ivs);
+    }
+    if (self.get('trigger')) {
+      self.trigger('newCharacteristicData');
+    }
+  }
 
-},{
-   GetAllCharacteristics: function(next){
-      next(Characteristics.data.map(function(x){
-         return x.name;
-      }));
-   },
+}, {
+  GetAllCharacteristics: function(next) {
+    next(Characteristics.data.map(function(x) {
+      return x.name;
+    }));
+  }
 
-})
+});
 
 module.exports = CharacteristicModel;

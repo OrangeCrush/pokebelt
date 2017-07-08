@@ -1,6 +1,5 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
-var $ = require('jquery');
 var fs = require('fs');
 
 /*
@@ -26,45 +25,45 @@ var fs = require('fs');
  * 
  */
 var DropDownView = Backbone.View.extend({
-   initialize: function(opts){
-      this.list     = [];
-      this.selected = '';
-      this.label    = '';
-      this.optional = false;
-      this.bind     = this;
-      this.sorted   = false;
-      _.extend(this, opts);
-   },
+  initialize: function(opts) {
+    this.list = [];
+    this.selected = '';
+    this.label = '';
+    this.optional = false;
+    this.bind = this;
+    this.sorted = false;
+    _.extend(this, opts);
+  },
 
-   refresh: function(){
-      var self = this;
-      if(this.src.constructor ==  Array){
-         self.list = self.src;
-         self.trigger('newDropDownData');
-      }else if(typeof self.src === 'function'){
-         self.src(function(results){
-            self.list = results;
-            self.trigger('newDropDownData');
-         });
-      }
-      return this;
-   },
+  refresh: function() {
+    var self = this;
+    if (this.src.constructor === Array) {
+      self.list = self.src;
+      self.trigger('newDropDownData');
+    } else if (typeof self.src === 'function') {
+      self.src(function(results) {
+        self.list = results;
+        self.trigger('newDropDownData');
+      });
+    }
+    return this;
+  },
 
-   DropDownTemplate: _.template(fs.readFileSync(__dirname + '/../../templates/DropDownTemplate.html', 'utf8')),
+  DropDownTemplate: _.template(fs.readFileSync(__dirname + '/../../templates/DropDownTemplate.html', 'utf8')),
 
-   /*
+  /*
     * Attach any data elements to the select
     */
-   render: function(){
-      if(this.sorted){
-         this.list = this.list.sort();
-      }
-      this.$el.html('');
-      this.$el.append(this.DropDownTemplate(this));
-      for(var key in this.data){
-         this.$('select').attr('data-' + key, this.data[key]);
-      }
-   }
+  render: function() {
+    if (this.sorted) {
+      this.list = this.list.sort();
+    }
+    this.$el.html('');
+    this.$el.append(this.DropDownTemplate(this));
+    for (var key in this.data) {
+      this.$('select').attr('data-' + key, this.data[key]);
+    }
+  }
 
 });
 
