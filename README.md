@@ -1,5 +1,7 @@
 # Pokebelt
 
+![TravisCI Build Status](https://travis-ci.org/OrangeCrush/pokebelt.svg?branch=master)
+
 [Pokebelt](http://www.pokebelt.com) is a website focusing on very specific and niche pokemon tools. 
 Recently updated to include Sun and Moon Pokemon!
 
